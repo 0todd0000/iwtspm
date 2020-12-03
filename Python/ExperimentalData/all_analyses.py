@@ -80,7 +80,7 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=None):
 	if dv_label is not None:
 		ax0.set_ylabel( dv_label )
 	### plot p curves
-	ax1.plot( q, p_unadjusted, 'k', lw=5, label='Unadjusted')
+	ax1.plot( q, p_unadjusted, '0.7', lw=3, label='Unadjusted')
 	ax1.plot( q, p_iwt,  'b', label='IWT')
 	ax1.plot( q, p_spm,  'c', label='SPM')
 	ax1.plot( q, p_snpm, 'm', label='SnPM')
