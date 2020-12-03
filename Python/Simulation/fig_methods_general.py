@@ -45,9 +45,10 @@ ax0,ax1 = AX[0]
 ax2,ax3 = AX[1]
 ### plot:
 q   = np.linspace(0, 1, Q)
-ax0.plot(q,  e0.T, 'k', lw=1 )
-ax0.plot(q,  e1.T, 'b', lw=1 )
+h0  = ax0.plot(q,  e0.T, 'k', lw=1 )[0]
+h1  = ax0.plot(q,  e1.T, 'b', lw=1 )[0]
 ax0.set_title('(a)  Error smoothness')
+ax0.legend([h0,h1], ['FWHM = 5', 'FWHM = 30'])
 
 ax1.plot(q,  e2.T, 'k', lw=0.3 )
 ax1.set_title('(b)  Error distribution (Gauss skewed)')
