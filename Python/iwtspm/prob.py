@@ -11,7 +11,7 @@ def p_iwt(y0, y1, niter=1000, seed=1, fname_data=None, fname_results=None):
 	group        = [0]*y0.shape[0] + [1]*y1.shape[0]
 	a            = np.vstack( [group, y.T] ).T
 	np.savetxt(fname_data, a, delimiter=',', fmt='%.3f')
-	fnameR       = '/Users/todd/GitHub/iwtspm/R/run_iwt_two_tailed.R'
+	fnameR       = os.path.join( os.path.dirname( __file__ ) , 'R', 'run_iwt_two_tailed.R')
 	os.system( f'Rscript {fnameR} {seed} {niter} {fname_data} {fname_results}' )
 	p            = np.loadtxt(fname_results, delimiter=',')
 	return p
