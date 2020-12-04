@@ -4,6 +4,7 @@ from math import sqrt,log
 import numpy as np
 from scipy import stats
 from . import signal
+from spm1d import rft1d
 
 eps         = np.finfo(np.float).eps
 
@@ -32,8 +33,19 @@ def gauss1d(J, Q):
 	rcg = BernsteinSum(Q, rng=gauss)
 	return rcg.rand(J)
 
-
+def gauss1dns(J, Q, fwhm=10, s=1):
+	'''
+	Nonstationary Gaussian 1D noise
+	'''
+	# e     = gauss1d(J, Q)
+	e     = rft1d.randn1d(J, Q, FWHM=fwhm, pad=True)
+	return s * e
+	
 def gauss1dnu(J, Q, FWHM):
+	'''
+	Nonuniform Gaussian 1D noise
+	(NOTE!!!  Variance is not controlled)
+	'''
 	Q     = FWHM.size
 	z     = np.random.randn(Q, J)
 	s     = FWHM / (  (Q-1) * sqrt( 4*log(2) )  )
@@ -72,6 +84,8 @@ def skewed1d(J, Q, alpha=0):
 def generate_dataset(J, Q, sig_amp=1, sig_width=10, dist='gauss', distparams=None):
 	if dist == 'gauss':
 		rng = lambda: gauss1d( J , Q )
+	elif dist == 'gaussns':
+		rng = lambda: gauss1dns( J , Q , *distparams )
 	elif dist == 'gaussnu':
 		rng = lambda: gauss1dnu( J , Q , distparams[0] )
 	elif dist == 'moyal':
