@@ -1,8 +1,10 @@
 
 
-from math import sqrt,log
+from math import sqrt,log,pi
 import numpy as np
 from scipy import stats
+from scipy.special import gamma
+from scipy.special import kv as besselk
 from . import signal
 from spm1d import rft1d
 
@@ -80,6 +82,68 @@ def skewed1d(J, Q, alpha=0):
 	return rcg.rand(J)
 
 
+def rho2fwhm(x):
+	return 92.98198 * x + 0.34888
+def fwhm2rho(x):
+	return 0.010751 * x -0.00365
+
+def matern(d, rho, nu, phi=1):
+	'''
+	Modified from matern.m in the BFDA package for Matlab (Yang & Ren, 206)
+	
+	Downloaded 2020-12-11
+	
+	Yang J, Ren P (2019). BFDA: A matlab toolbox for bayesian functional data analysis. J Stat Soft 89(2): doi: 10.18637/jss.v089.i02
+	10.18637/jss.v089.i02
+	https://www.jstatsoft.org/article/view/v089i02
+	'''
+	dm        = (d * sqrt(2*nu)) / rho
+	dm[dm==0] = 1e-10
+	con       = 1 / (  2**(nu-1) * gamma(nu) )
+	cov       = phi * con * (dm**nu) * besselk(nu, dm)
+	return cov
+
+
+def mycholesky(sig):
+	'''
+	Modified from mychol.m in the BFDA package for Matlab (Yang & Ren, 206)
+	
+	Downloaded 2020-12-11
+	
+	Yang J, Ren P (2019). BFDA: A matlab toolbox for bayesian functional data analysis. J Stat Soft 89(2): doi: 10.18637/jss.v089.i02
+	10.18637/jss.v089.i02
+	https://www.jstatsoft.org/article/view/v089i02
+	'''
+	U,S,V = np.linalg.svd(sig)
+	DS    = S
+	DS    = np.sqrt(DS)
+	minDS = np.mean(DS)*10e-8
+	DS[DS < 0] = minDS
+	L = U @ np.diag(DS)
+	return L
+	
+def randn1d_matern(n, p, s=1, fwhm=10, order=5):
+	'''
+	Modified from sim_gfd.m in the BFDA package for Matlab (Yang & Ren, 206)
+	
+	Downloaded 2020-12-11
+	
+	Yang J, Ren P (2019). BFDA: A matlab toolbox for bayesian functional data analysis. J Stat Soft 89(2): doi: 10.18637/jss.v089.i02
+	10.18637/jss.v089.i02
+	https://www.jstatsoft.org/article/view/v089i02
+	'''
+	J          = np.ones( (p, 1) )
+	pgrid      = np.arange(0.001, pi/2+0.01, (pi/2)/(p-1))
+	pgridm     = np.array( [pgrid] )
+	D          = np.abs( J @ pgridm - pgridm.T @ J.T )
+	rho        = fwhm2rho( fwhm )
+	cov        = matern(D, rho, order)
+	L          = mycholesky( cov )
+	r          = ( L @ np.random.randn(p, n) ).T
+	r          = r * s
+	return r
+
+	
 
 def generate_dataset(J, Q, sig_amp=1, sig_width=10, dist='gauss', distparams=None):
 	if dist == 'gauss':
@@ -92,6 +156,8 @@ def generate_dataset(J, Q, sig_amp=1, sig_width=10, dist='gauss', distparams=Non
 		rng = lambda: moyal1d( J , Q )
 	elif dist == 'skewed':
 		rng = lambda: skewed1d( J , Q , alpha=distparams[0] )
+	elif dist == 'gauss_matern':
+		rng = lambda: randn1d_matern( J , Q , s=distparams[0] , fwhm=distparams[1] )
 	m0  = np.zeros( Q )
 	m1  = signal.sigmoid_pulse(Q=Q, q0=50, w=sig_width, wfall=5, amp=sig_amp)
 	y0  = m0 + rng()
