@@ -22,7 +22,7 @@ mpl.rcParams['font.sans-serif'] = 'Arial'
 Q     = 101
 amp   = 1
 q0    = 50
-w     = 20
+w     = 40
 wfall = 5
 
 # q0       = int( floor( 50 - 0.5 * w ) )
