@@ -96,6 +96,6 @@ plt.show()
 
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
-fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_methods_nu.pdf')
-plt.savefig(fname_fig)
+# dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+# fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_methods_nu.pdf')
+# plt.savefig(fname_fig)
