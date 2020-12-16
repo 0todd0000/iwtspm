@@ -61,19 +61,32 @@ for dataset_label in dataset_labels:
 	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
 	y0,y1         = load_csv(fname_data)
 	ww            = estimate_fwhm( y0 , y1, mean=False )
-	w.append(ww)
+	w.append( 0.01 * ww )
 
 
 
 plt.close('all')
-plt.figure()
+fig,(ax0,ax1) = plt.subplots(1, 2, figsize=(8,3))
 plt.get_current_fig_manager().window.move(0, 0)
-ax = plt.axes()
 for ww in w:
 	x = np.linspace(0, 1, ww.size)
-	ax.plot(x, ww)
-ax.legend(dataset_labels)
-ax.set_ylabel('Estimated smoothness (FWHM)')
+	ax0.plot(x, ww)
+ax0.legend(dataset_labels)
+ax0.set_xlabel('Domain position')
+ax0.set_ylabel('Estimated smoothness (FWHM)')
+
+# plot means:
+x    = np.arange( len(w) )
+m    = [ww.mean()  for ww in w]
+bars = ax1.bar(x, m)
+for l,b in zip( ax0.lines , bars ):
+	b.set_color( l.get_color() )
+labels    = ['Kautz\n1991a', 'Kautz\n1991b', 'Neptune\n1999', 'Besier\n2009a', 'Besier\n2009b', 'Dorn\n2012']
+plt.setp(ax1, xticks=x, xticklabels=labels)
+ax1.set_ylabel('Mean smoothness (FWHM)')
+
+[ax.text(0.03, 1.03, '(%s)'%chr(97+i), transform=ax.transAxes)   for i,ax in enumerate([ax0,ax1])]
+
 plt.tight_layout()
 plt.show()
 
