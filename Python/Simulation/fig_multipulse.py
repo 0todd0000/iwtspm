@@ -59,7 +59,8 @@ ax0.plot(q,  y0.T, 'k', lw=0.3 )
 ax0.plot(q,  y1.T, 'r', lw=0.3 )
 ax0.plot(q, y0.mean(axis=0), 'k', lw=5, label='Mean A' )
 ax0.plot(q, y1.mean(axis=0), 'r', lw=5, label='Mean B' )
-ax0.legend()
+ax0.legend(loc='lower left', bbox_to_anchor=(0.31, 0.01))
+
 
 ### plot p curves
 if run_tests:
@@ -68,9 +69,19 @@ if run_tests:
 	ax1.plot(q, p2, 'c', label='SPM')
 	ax1.plot(q, p3, 'm', label='SnPM')
 	ax1.axhline(0.05, color='k', linestyle='--')
-	ax1.set_ylim(-0.05, 1.05)
+	ax1.set_ylim(-0.05, 1.09)
 	ax1.set_ylabel( 'Probability' )
 	ax1.legend()
+	
+	
+d0   = r'$\mathcal{D}_0$'
+d1   = r'$\mathcal{D}_1$'
+winx = [0.1, 0.4, 0.7]
+for ax in AX:
+	[ax.axvspan(x, x+0.2, alpha=0.5, color='0.7')  for x in winx]
+	[ax.text(x, 0.93, s, ha='center', transform=ax.transAxes)  for x,s in zip([0.075, 0.22, 0.36, 0.5, 0.63, 0.77, 0.93], [d0,d1,d0,d1,d0,d1,d0] )]
+	
+
 plt.tight_layout()
 plt.show()
 
