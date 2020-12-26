@@ -57,13 +57,14 @@ d1  = r'$\mathcal{D}_1$'
 for ax,y0,y1 in zip(AX, [yA0,yB0], [yA1,yB1]):
 	ax.plot(q,  y0.T, 'k', lw=0.3 )
 	ax.plot(q,  y1.T, 'r', lw=0.3 )
-	ax.plot(q, y0.mean(axis=0), 'k', lw=5, label='Mean A' )
-	ax.plot(q, y1.mean(axis=0), 'r', lw=5, label='Mean B' )
+	ax.plot(q, y0.mean(axis=0), 'k', lw=5, label='Sample mean A' )
+	ax.plot(q, y1.mean(axis=0), 'r', lw=5, label='Sample mean B' )
 	
 	ax.axvspan(0.25, 0.75, alpha=0.5, color='0.7')
 	[ax.text(x, 0.93, s, ha='center', transform=ax.transAxes)  for x,s in zip([0.15, 0.5, 0.85], [d0,d1,d0] )]
 
 ax0.legend(loc='lower center')
+# ax0.legend(loc='lower left', bbox_to_anchor=(0.27, 0.01))
 labels = [f'(a)  FWHM ratio = {fwhm_ratio0}', f'(b)  FWHM ratio = {fwhm_ratio1}']
 [ax.text(0.06, 1.03, s, transform=ax.transAxes)   for ax,s in zip(AX,labels)]
 plt.tight_layout()

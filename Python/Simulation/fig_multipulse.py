@@ -57,9 +57,9 @@ ax0,ax1 = AX.flatten()
 q   = np.linspace(0, 1, Q)
 ax0.plot(q,  y0.T, 'k', lw=0.3 )
 ax0.plot(q,  y1.T, 'r', lw=0.3 )
-ax0.plot(q, y0.mean(axis=0), 'k', lw=5, label='Mean A' )
-ax0.plot(q, y1.mean(axis=0), 'r', lw=5, label='Mean B' )
-ax0.legend(loc='lower left', bbox_to_anchor=(0.31, 0.01))
+ax0.plot(q, y0.mean(axis=0), 'k', lw=5, label='Sample mean A' )
+ax0.plot(q, y1.mean(axis=0), 'r', lw=5, label='Sample mean B' )
+ax0.legend(loc='lower left', bbox_to_anchor=(0.27, 0.01))
 
 
 ### plot p curves
