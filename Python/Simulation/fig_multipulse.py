@@ -15,10 +15,10 @@ mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
 
-def generate_dataset_multipulse():
-	y0,y1 = iws.random.generate_dataset(J, Q, sig_amp=0, sig_width=sig_width, dist='gauss_matern', distparams=(s,w))
-	sig   = iws.signal.multi_pulse(Q=101, q=[20, 50, 80], w=pwidth)
-	y1    = y1 + sig
+def generate_dataset_multipulse(pwidth=12, sd=1, fwhm=20):
+	y0,y1  = iws.random.generate_dataset(J, Q, sig_amp=0, sig_width=pwidth, dist='gauss_matern', distparams=(sd,fwhm))
+	sig    = iws.signal.multi_pulse(Q=101, q=[20, 50, 80], w=pwidth, wfall=5)
+	y1     = y1 + sig
 	return y0,y1
 
 
@@ -29,18 +29,12 @@ wd          = os.path.join( os.path.dirname( __file__ ) , '_wd' )
 ### set baseline parameters:
 Q           = 101
 J           = 20
-sig_amp     = 1
-sig_width   = 40
 sd          = 1
-sd_ratio    = 1
 fwhm        = 20
-fwhm_ratio  = 1
-pwidth      = 10
+pwidth      = 12
 run_tests   = True
 ### construct simulation objects:
-s           = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(sd*sd_ratio), amp1=sd )
-w           = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(fwhm*fwhm_ratio), amp1=fwhm)
-gen         = generate_dataset_multipulse
+gen         = lambda : generate_dataset_multipulse(pwidth, sd, fwhm)
 if run_tests:
 	sim         = iws.sim.Simulator(wd, gen, suff='')
 	sim.clear_wd()
