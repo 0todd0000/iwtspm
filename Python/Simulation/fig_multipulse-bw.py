@@ -1,0 +1,96 @@
+
+'''
+Create figure describing simulation methods for nonuniform data.
+'''
+
+import os,unipath
+import numpy as np
+import matplotlib as mpl
+from matplotlib import pyplot as plt
+import iwtspm as iws
+
+plt.style.use('bmh')
+mpl.rcParams['xtick.labelsize'] = 'small'
+mpl.rcParams['ytick.labelsize'] = 'small'
+mpl.rcParams['font.sans-serif'] = 'Arial'
+
+colors     = ['0.75', 'k', '0.0', '0.5']
+markers    = ['o', 'o', 's', '^']
+markers    = ['', '', '', '']
+mfcs       = ['0.7', 'k', '0.0', '1.0']
+lss       = ['-', '-', '--', '--']
+lws       = [3, 2, 2, 1.5]
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+
+
+def generate_dataset_multipulse(pwidth=12, sd=1, fwhm=20):
+	y0,y1  = iws.random.generate_dataset(J, Q, sig_amp=0, sig_width=pwidth, dist='gauss_matern', distparams=(sd,fwhm))
+	sig    = iws.signal.multi_pulse(Q=101, q=[20, 50, 80], w=pwidth, wfall=5)
+	y1     = y1 + sig
+	return y0,y1
+
+
+
+#(0) Run a single iteration:
+np.random.seed(3)
+wd          = os.path.join( os.path.dirname( __file__ ) , '_wd' )
+### set baseline parameters:
+Q           = 101
+J           = 20
+sd          = 1
+fwhm        = 20
+pwidth      = 12
+run_tests   = True
+### construct simulation objects:
+gen         = lambda : generate_dataset_multipulse(pwidth, sd, fwhm)
+if run_tests:
+	sim         = iws.sim.Simulator(wd, gen, suff='')
+	sim.clear_wd()
+	p0,p1,p2,p3 = sim.run_iteration()
+	y0,y1       = sim.get_data()
+else:
+	y0,y1   = gen()
+### plot:
+plt.close('all')
+fig,AX = plt.subplots( 1, 2, figsize=(8,3) )
+plt.get_current_fig_manager().window.move(0, 0)
+ax0,ax1 = AX.flatten()
+### plot dataset:
+q   = np.linspace(0, 1, Q)
+ax0.plot(q,  y0.T, 'k', lw=0.3 )
+ax0.plot(q,  y1.T, '0.8', lw=0.5 )
+ax0.plot(q, y0.mean(axis=0), 'k', lw=5, label='Sample mean A' )
+ax0.plot(q, y1.mean(axis=0), '0.7', lw=5, label='Sample mean B' )
+ax0.legend(loc='lower left', bbox_to_anchor=(0.27, 0.01), facecolor='w')
+
+
+### plot p curves
+if run_tests:
+	ax1.plot(q, p0, label='Unadjusted')
+	ax1.plot(q, p1, label='IWT')
+	ax1.plot(q, p2, label='SPM')
+	ax1.plot(q, p3, label='SnPM')
+	# ax1.axhline(0.05, color='k', linestyle='--')
+	ax1.axhline(0.05, color='0.9', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
+	ax1.set_ylim(-0.05, 1.09)
+	ax1.set_ylabel( 'Probability' )
+	ax1.legend(facecolor='w')
+	
+	
+d0   = r'$\mathcal{D}_0$'
+d1   = r'$\mathcal{D}_1$'
+winx = [0.1, 0.4, 0.7]
+for ax in AX:
+	[ax.axvspan(x, x+0.2, alpha=0.5, color='0.9')  for x in winx]
+	[ax.text(x, 0.93, s, ha='center', transform=ax.transAxes)  for x,s in zip([0.075, 0.22, 0.36, 0.5, 0.63, 0.77, 0.93], [d0,d1,d0,d1,d0,d1,d0] )]
+	ax.set_facecolor('1.0')
+	ax.grid(False)
+	
+
+plt.tight_layout()
+plt.show()
+
+
+dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_multipulse-bw.pdf')
+plt.savefig(fname_fig)
