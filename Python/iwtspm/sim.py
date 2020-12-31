@@ -1,4 +1,11 @@
 
+'''
+Convenience class for running simulations
+
+(this saves only about 10 lines of code in simulation scripts)
+'''
+
+
 import os, shutil
 from . import prob
 

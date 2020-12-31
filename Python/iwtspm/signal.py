@@ -1,20 +1,17 @@
 
+'''
+Convenience module for generating simple sigmoid pulse signals
+'''
+
+
 import numpy as np
 
-
-# def _fwhm_step(Q, w0, w1):
-# 	dx    = 5
-# 	x     = np.linspace(-5, 5, Q)
-# 	fwhm  = w0 + (w1-w0) / (1 + np.exp(-dx*x))
-# 	return fwhm
 
 def multi_pulse(Q=101, q=[50], w=10, wfall=5):
 	a           = np.zeros(Q)
 	for qq in q:
-		# b       = sigmoid_pulse(Q, qq-w, qq+w, 0, 1)
 		b       = sigmoid_pulse(Q, qq, w, wfall, 1)
 		a      += b
-		# a[qq-w:qq+w] = 1
 	return a
 
 def sigmoid_step(Q=101, q0=50, q1=75, x0=0, x1=1):

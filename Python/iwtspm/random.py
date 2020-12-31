@@ -1,4 +1,7 @@
 
+'''
+Convenience module for generating smooth, random 1D data
+'''
 
 from math import sqrt,log,pi
 import numpy as np
@@ -29,53 +32,19 @@ class BernsteinSum(object):
 
 
 
-def gauss( size=(1,) ):
-	return np.random.randn(*size)
-def gauss1d(J, Q):
-	rcg = BernsteinSum(Q, rng=gauss)
-	return rcg.rand(J)
-
 def gauss1dns(J, Q, fwhm=10, s=1):
 	'''
-	Nonstationary Gaussian 1D noise
+	Nonstationary, smooth Gaussian 1D noise
 	'''
-	# e     = gauss1d(J, Q)
 	e     = rft1d.randn1d(J, Q, FWHM=fwhm, pad=True)
 	return s * e
-	
-def gauss1dnu(J, Q, FWHM):
-	'''
-	Nonuniform Gaussian 1D noise
-	(NOTE!!!  Variance is not controlled)
-	'''
-	Q     = FWHM.size
-	z     = np.random.randn(Q, J)
-	s     = FWHM / (  (Q-1) * sqrt( 4*log(2) )  )
-	dx    = 1. / (Q -1)
-	x     = np.array([dx * np.arange(Q)])
-	X     = np.repeat(x, Q, 0) 
-	D     =  X - np.repeat(x.T, Q, 1)  #;   %distance matrix (relative to diagonal nodes)
-	A     = np.exp(-0.5*D**2 /  (s**2) )
-	
-	[U,V]  =  np.linalg.eig(A.T)
-	U,V    = np.real(U), np.real(V)
-	U[U<eps] = 0
-	U,V    = np.matrix(np.diag( np.sqrt(U) )), np.matrix(V)
-	C      = V * U * V.T
-	y      = (C * z).T
-	return np.asarray(y)
-
-
-def moyal( size=(1,) ):
-	return stats.moyal.rvs( size=size ) - stats.moyal.expect()
-def moyal1d(J, Q):
-	rcg = BernsteinSum(Q, rng=moyal)
-	return rcg.rand(J)
-	
 
 def skewed( alpha=0, size=(1,) ):
 	return stats.skewnorm.rvs( alpha, size=size ) - stats.skewnorm.expect(np.mean, (alpha,)) 
 def skewed1d(J, Q, alpha=0):
+	'''
+	Skewed, smooth Gaussian 1D noise
+	'''
 	def rng( size=(1,) ):
 		return skewed(alpha=alpha, size=size)
 	rcg = BernsteinSum(Q, rng=rng)
@@ -104,7 +73,7 @@ def matern(d, rho, nu, phi=1):
 	return cov
 
 
-def mycholesky(sig):
+def cholesky(sig):
 	'''
 	Modified from mychol.m in the BFDA package for Matlab (Yang & Ren, 206)
 	
@@ -138,7 +107,7 @@ def randn1d_matern(n, p, s=1, fwhm=10, order=5):
 	D          = np.abs( J @ pgridm - pgridm.T @ J.T )
 	rho        = fwhm2rho( fwhm )
 	cov        = matern(D, rho, order)
-	L          = mycholesky( cov )
+	L          = cholesky( cov )
 	r          = ( L @ np.random.randn(p, n) ).T
 	r          = r * s
 	return r
@@ -146,18 +115,12 @@ def randn1d_matern(n, p, s=1, fwhm=10, order=5):
 	
 
 def generate_dataset(J, Q, sig_amp=1, sig_width=10, dist='gauss', distparams=None):
-	if dist == 'gauss':
-		rng = lambda: gauss1d( J , Q )
+	if dist == 'gauss_matern':
+		rng = lambda: randn1d_matern( J , Q , s=distparams[0] , fwhm=distparams[1] )
 	elif dist == 'gaussns':
 		rng = lambda: gauss1dns( J , Q , *distparams )
-	elif dist == 'gaussnu':
-		rng = lambda: gauss1dnu( J , Q , distparams[0] )
-	elif dist == 'moyal':
-		rng = lambda: moyal1d( J , Q )
 	elif dist == 'skewed':
 		rng = lambda: skewed1d( J , Q , alpha=distparams[0] )
-	elif dist == 'gauss_matern':
-		rng = lambda: randn1d_matern( J , Q , s=distparams[0] , fwhm=distparams[1] )
 	m0  = np.zeros( Q )
 	m1  = signal.sigmoid_pulse(Q=Q, q0=50, w=sig_width, wfall=5, amp=sig_amp)
 	y0  = m0 + rng()

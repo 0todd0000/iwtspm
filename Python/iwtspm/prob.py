@@ -1,4 +1,20 @@
 
+'''
+Probability calculators for 1D data
+
+Only a single test is implemented:
+- two-sample (two-tailed) 
+
+The following 1D probabilities can be calculated:
+- Unadjusted  (typical probability for univariate 0D data)
+- IWT (Interval Wise Testing)
+- SPM (Statistical Parametric Mapping)
+- SnPM (Statistical non-Parametric Mapping) (i.e., permutation tests)
+
+See the manuscript for descriptions of these procedures
+'''
+
+
 import os
 import numpy as np
 from scipy import stats
