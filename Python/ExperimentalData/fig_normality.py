@@ -46,8 +46,11 @@ plt.get_current_fig_manager().window.move(0, 0)
 for i,(ax,spm) in enumerate( zip(AX.flatten(), spms) ):
 	k2 = spm.z
 	x  = np.linspace(0, 1, k2.size)
-	ax.plot(x, k2)
+	ax.plot(x, k2, '0.5')
 	ax.text( 0.05, 0.92, '(%s)  %s' %(chr(97+i), dataset_labels[i]),  transform=ax.transAxes  )
+	ax.set_facecolor('1.0')
+	ax.grid(False)
+	
 
 plt.setp(AX, ylim=(0, 60))
 [ax.set_ylabel(f'K2 value')  for ax in AX[:,0]]

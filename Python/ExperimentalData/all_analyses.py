@@ -24,6 +24,16 @@ mpl.rcParams['xtick.labelsize'] = 'small'
 mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
+colors     = ['0.89', 'k', '0.0', '0.5']
+markers    = ['o', 'o', 's', '^']
+markers    = ['', '', '', '']
+mfcs       = ['0.7', 'k', '0.0', '1.0']
+lss       = ['-', '-', '--', '--']
+lws       = [3, 2, 2, 1.5]
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+
+
+
 
 def load_csv(fnameCSV):
 	a            = np.loadtxt(fname_data, delimiter=',')
@@ -72,61 +82,69 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=None):
 	ax0,ax1 = AX.flatten()
 	q       = np.linspace(0, 1, p_unadjusted.size)
 	### plot dataset:
-	ax0.plot( q, y0.T, 'k', lw=0.3 )
-	ax0.plot( q, y1.T, 'r', lw=0.3 )
+	ax0.plot( q, y0.T, 'k', ls='-', lw=0.3 )
+	ax0.plot( q, y1.T, '0.7', ls='-', lw=0.5 )
 	ax0.plot( q, y0.mean(axis=0), 'k', lw=5, label='Mean A' )
-	ax0.plot( q, y1.mean(axis=0), 'r', lw=5, label='Mean B' )
-	ax0.legend()
+	ax0.plot( q, y1.mean(axis=0), '0.7', lw=5, label='Mean B' )
+	ax0.legend(facecolor='w')
 	if dv_label is not None:
 		ax0.set_ylabel( dv_label )
 	### plot p curves
-	ax1.plot( q, p_unadjusted, '0.7', lw=3, label='Unadjusted')
-	ax1.plot( q, p_iwt,  'b', label='IWT')
-	ax1.plot( q, p_spm,  'c', label='SPM')
-	ax1.plot( q, p_snpm, 'm', label='SnPM')
-	ax1.axhline(0.05, color='k', linestyle='--')
+	ax1.plot( q, p_unadjusted, label='Unadjusted')
+	ax1.plot( q, p_iwt,  label='IWT')
+	ax1.plot( q, p_spm,  label='SPM')
+	ax1.plot( q, p_snpm, label='SnPM')
+	ax1.axhline(0.05, color='0.85', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
+
+
+
 	ax1.set_ylim(-0.05, 1.05)
-	ax1.legend()
+	ax1.legend(facecolor='w')
 	ax1.set_ylabel( 'Probability' )
+	
+	for ax in [ax0,ax1]:
+		ax.set_facecolor('1.0')
+		ax.grid(False)
+	
 	plt.tight_layout()
 
 
 
-# (0) Analyze one dataset:
-dataset_label      = 'Kautz1991a'
-dirREPO            = unipath.Path( os.path.dirname(__file__) ).parent.parent
-fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-y0,y1              = load_csv(fname_data)
-p_unadjusted       = calc_p_unadjusted(y0, y1)
-p_spm              = calc_p_adjusted_spm(y0, y1)
-p_snpm             = calc_p_adjusted_snpm(y0, y1)
-p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-# p_iwt = 0.5 * np.ones(y0.shape[1])
-plt.close('all')
-plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label='Force (N)')
-plt.show()
+# # (0) Analyze one dataset:
+# dataset_label      = 'Kautz1991a'
+# dirREPO            = unipath.Path( os.path.dirname(__file__) ).parent.parent
+# fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+# y0,y1              = load_csv(fname_data)
+# p_unadjusted       = calc_p_unadjusted(y0, y1)
+# p_spm              = calc_p_adjusted_spm(y0, y1)
+# p_snpm             = calc_p_adjusted_snpm(y0, y1)
+# p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+# # p_iwt = 0.5 * np.ones(y0.shape[1])
+# plt.close('all')
+# plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label='Force (N)')
+# plt.show()
 
 
 
 
 
 
-# # (1) Analyze all datasets (and save figures):
-# dirREPO           = unipath.Path( os.path.dirname(__file__) ).parent.parent
-# dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
-# dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
-# for dataset_label, dv_label in zip(dataset_labels, dv_labels):
-# 	print( f'Processing {dataset_label}...')
-# 	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-# 	fname_fig     = os.path.join( dirREPO, 'Figures', 'ExperimentalData', '%s.pdf' %dataset_label)
-# 	y0,y1         = load_csv(fname_data)
-# 	p_unadjusted  = calc_p_unadjusted(y0, y1)
-# 	p_spm         = calc_p_adjusted_spm(y0, y1)
-# 	p_snpm        = calc_p_adjusted_snpm(y0, y1)
-# 	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-# 	plt.close('all')
-# 	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=dv_label)
-# 	plt.show()
-# 	plt.savefig(fname_fig)
-#
+# (1) Analyze all datasets (and save figures):
+dirREPO           = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
+dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
+for dataset_label, dv_label in zip(dataset_labels, dv_labels):
+	print( f'Processing {dataset_label}...')
+	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+	fname_fig     = os.path.join( dirREPO, 'Figures', 'ExperimentalData', '%s.pdf' %dataset_label)
+	y0,y1         = load_csv(fname_data)
+	p_unadjusted  = calc_p_unadjusted(y0, y1)
+	p_spm         = calc_p_adjusted_spm(y0, y1)
+	p_snpm        = calc_p_adjusted_snpm(y0, y1)
+	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+	plt.close('all')
+	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=dv_label)
+	plt.show()
+	plt.savefig(fname_fig)
+
 

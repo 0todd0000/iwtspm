@@ -45,9 +45,12 @@ fig,AX = plt.subplots(2, 3, figsize=(10,5) )
 plt.get_current_fig_manager().window.move(0, 0)
 for i,(ax,s) in enumerate( zip(AX.flatten(), sd) ):
 	x = np.linspace(0, 1, s.size)
-	ax.plot(x, s)
+	ax.plot(x, s, '0.5')
 	ax.text( 0.05, 0.92, '(%s)  %s' %(chr(97+i), dataset_labels[i]),  transform=ax.transAxes  )
 	ax.set_ylabel(f'SD  ({unitstrs[i]})')
+	ax.set_facecolor('1.0')
+	ax.grid(False)
+	
 
 AX[0,1].set_ylim(5, 60)
 AX[1,0].set_ylim(30, 420)

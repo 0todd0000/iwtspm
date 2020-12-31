@@ -18,6 +18,15 @@ mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
 
+colors     = ['0.8','0.8', '0',  '0.5','0.5', '0']
+markers    = [''] * 6
+lss       = ['-','--'] * 3
+lws       = [2, 2,   2,2,   2,2]
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, ls=lss, lw=lws)
+
+
+
+
 def estimate_resels(R):
 	ssq    = (R**2).sum(axis=0)
 	### gradient estimation (Method 2)
@@ -71,7 +80,7 @@ plt.get_current_fig_manager().window.move(0, 0)
 for ww in w:
 	x = np.linspace(0, 1, ww.size)
 	ax0.plot(x, ww)
-ax0.legend(dataset_labels)
+ax0.legend(dataset_labels, facecolor='w', fontsize=8)
 ax0.set_xlabel('Domain position')
 ax0.set_ylabel('Estimated smoothness (FWHM)')
 
@@ -86,6 +95,10 @@ plt.setp(ax1, xticks=x, xticklabels=labels)
 ax1.set_ylabel('Mean smoothness (FWHM)')
 
 [ax.text(0.03, 1.03, '(%s)'%chr(97+i), transform=ax.transAxes)   for i,ax in enumerate([ax0,ax1])]
+for ax in [ax0,ax1]:
+	ax.set_facecolor('1.0')
+	ax.grid(False)
+	
 
 plt.tight_layout()
 plt.show()
