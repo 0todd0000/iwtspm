@@ -39,7 +39,7 @@ plt.get_current_fig_manager().window.move(0, 0)
 ax0,ax1 = AX.flatten()
 ### plot dataset:
 q   = np.linspace(0, 1, Q)
-ax0.plot(q,  y.T, 'k', lw=0.3 )
+ax0.plot(q,  y.T, lw=0.3 )
 ax1.hist( y[:,50], color='0.7', alpha=0.8, bins=21 )
 labels = ['(a)', '(b)  Distribution at position = 0.5']
 [ax.text(0.06, 0.94, s, transform=ax.transAxes)   for ax,s in zip(AX,labels)]

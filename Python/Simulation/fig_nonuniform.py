@@ -16,13 +16,15 @@ mpl.rcParams['xtick.labelsize'] = 'small'
 mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
-colors     = ['0.89', 'k', '0.0', '0.5']
-markers    = ['o', 'o', 's', '^']
-markers    = ['', '', '', '']
-mfcs       = ['0.7', 'k', '0.0', '1.0']
-lss       = ['-', '-', '--', '--']
-lws       = [3, 2, 2, 1.5]
-plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+grayscale  = True
+if grayscale:
+	colors     = ['0.89', 'k', '0.0', '0.5']
+	markers    = ['o', 'o', 's', '^']
+	markers    = ['', '', '', '']
+	mfcs       = ['0.7', 'k', '0.0', '1.0']
+	lss        = ['-', '-', '--', '--']
+	lws        = [3, 2, 2, 1.5]
+	plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
 
 
 #(0) Generate data to demonstrate simulation methods:
@@ -58,13 +60,14 @@ plt.get_current_fig_manager().window.move(0, 0)
 ax0,ax1 = AX.flatten()
 ### plot dataset:
 q   = np.linspace(0, 1, Q)
+c0,c1 = ('k','0.7') if grayscale else ('k','r')
 d0  = r'$\mathcal{D}_0$'
 d1  = r'$\mathcal{D}_1$'
 for ax,y0,y1 in zip(AX, [yA0,yB0], [yA1,yB1]):
-	ax.plot(q,  y0.T, 'k', ls='-', lw=0.3 )
-	ax.plot(q,  y1.T, '0.85', ls='-', lw=0.5 )
-	ax.plot(q, y0.mean(axis=0), 'k', lw=5, label='Sample mean A' )
-	ax.plot(q, y1.mean(axis=0), '0.7', lw=5, label='Sample mean B' )
+	ax.plot(q,  y0.T, color=c0, ls='-', lw=0.3 )
+	ax.plot(q,  y1.T, color=c1, ls='-', lw=0.5 )
+	ax.plot(q, y0.mean(axis=0), color=c0, lw=5, label='Sample mean A' )
+	ax.plot(q, y1.mean(axis=0), color=c1, lw=5, label='Sample mean B' )
 	
 	ax.axvspan(0.25, 0.75, alpha=0.5, color='0.9')
 	[ax.text(x, 0.93, s, ha='center', transform=ax.transAxes)  for x,s in zip([0.15, 0.5, 0.85], [d0,d1,d0] )]
@@ -81,7 +84,9 @@ plt.show()
 
 
 dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
-fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_nonuniform.pdf')
+dirFIG        = os.path.join( dirREPO, 'Figures', 'Simulation')
+dirFIG        = os.path.join(dirFIG, 'bw') if grayscale else dirFIG
+fname_fig     = os.path.join( dirFIG, 'fig_nonuniform.pdf')
 plt.savefig(fname_fig)
 
 
