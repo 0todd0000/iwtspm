@@ -28,11 +28,13 @@ class Simulator(object):
 	def get_data(self):
 		return self.y0, self.y1
 	
-	def run_iteration(self, J0=None):
+	def run_iteration(self, J0=None, sd0=None):
 		y0,y1    = self.gen()
 		if J0 is not None:
 			y       = np.vstack([y0, y1])
 			y0,y1   = y[:J0], y[J0:]
+		elif sd0 is not None:
+			y0      = sd0 * y0
 		fdata    = os.path.join(self.wd, 'data%s.csv' %self.suff)
 		fresults = os.path.join(self.wd, 'iwt%s.csv' %self.suff)
 		p0       = prob.p_unadjusted(y0, y1)
