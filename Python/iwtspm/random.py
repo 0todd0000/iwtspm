@@ -114,15 +114,18 @@ def randn1d_matern(n, p, s=1, fwhm=10, order=5):
 
 	
 
-def generate_dataset(J, Q, sig_amp=1, sig_width=10, dist='gauss', distparams=None):
+def generate_dataset(Q, sample_sizes=(20,20), sigma=(1,1), sig_amp=1, sig_width=10, dist='gauss', distparams=None):
+	nA,nB   = sample_sizes
+	ntotal  = nA + nB
 	if dist == 'gauss_matern':
-		rng = lambda: randn1d_matern( J , Q , s=distparams[0] , fwhm=distparams[1] )
+		rng = lambda: randn1d_matern( ntotal , Q , s=distparams[0] , fwhm=distparams[1] )
 	elif dist == 'gaussns':
-		rng = lambda: gauss1dns( J , Q , *distparams )
+		rng = lambda: gauss1dns( ntotal , Q , *distparams )
 	elif dist == 'skewed':
-		rng = lambda: skewed1d( J , Q , alpha=distparams[0] )
+		rng = lambda: skewed1d( ntotal , Q , alpha=distparams[0] )
 	m0  = np.zeros( Q )
 	m1  = signal.sigmoid_pulse(Q=Q, q0=50, w=sig_width, wfall=5, amp=sig_amp)
-	y0  = m0 + rng()
-	y1  = m1 + rng()
+	y   = rng()
+	y0  = m0 + sigma[0]*y[:nA]
+	y1  = m1 + sigma[1]*y[nA:]
 	return y0, y1
