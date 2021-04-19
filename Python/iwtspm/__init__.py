@@ -1,4 +1,4 @@
 
-from . import random
+from . import rand
 from . import signal
 from . import sim
