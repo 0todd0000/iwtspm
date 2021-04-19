@@ -174,7 +174,7 @@ class SimulationManager(object):
 		caller       = inspect.stack()[2][0]
 		scriptpath   = inspect.getfile(caller)
 		_,sname      = os.path.split( scriptpath )
-		self.simname = sname.strip('.py').split('_')[1]
+		self.simname = sname[:-3].split('_')[1]
 		self.wd      = os.path.join( self._wdbase, self.simname)
 		if not os.path.exists( self.wd ):
 			os.mkdir( self.wd )

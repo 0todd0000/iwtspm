@@ -4,10 +4,10 @@ import iwtspm as iws
 
 
 wd          = '/Users/todd/Desktop/Working/'
-pname       = 'nA'
-x           = list( range(4,37,2) )
+pname       = 'signal_amp'
+x           = [0, 0.5, 1, 1.5, 2.0, 2.5, 3]
 niter       = 10000
-seed        = 127
+seed        = 136
 
 
 
