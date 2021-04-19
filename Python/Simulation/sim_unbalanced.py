@@ -59,58 +59,10 @@ wd          = '/Users/todd/Desktop/Working/'
 pname       = 'nA'
 x           = list( range(4,37,2) )
 manager     = iws.sim.SimulationManager(wd)
-manager.set_niter(5)
+manager.set_niter(20)
 manager.set_parameter('nA')
 manager.set_parameter_values( [15, 20, 25] )  # save a _varvalues.npy dictionary
 manager.run(seed0=0)
-# manager.set_values( range(4, 37, 2) )  # save a _varvalues.npy dictionary
-# # manager.run()
-#
-#
-# path2script           = '/Users/todd/GitHub/iwtspm/Python/iwtspm/script_run_simulation.py'
-# wd                    = '/Users/todd/Desktop/Working/'
-# niter                 = 10
-# param_name            = 'nA'
-# param_value           = 3
-# param_valuelist_index = 0
-# seed                  = 0
-# cmd                   = f'python {path2script} {wd} {niter} {param_name} {param_value} {param_valuelist_index} {seed}'
-# os.system(cmd)
-# # python /Users/todd/GitHub/iwtspm/Python/iwtspm/script_run_simulation.py /Users/todd/Desktop/Working/ nA 5 10 0 12345
-
-
-
-
-
-
-
-
-
-# #
-# #
-# # x           = xx[ind]
-# # np.random.seed( x )
-# # params      = iws.sim.SimulationParameters()
-# # params.set_nA( x )
-# # params.niter = 10
-# #
-# # sim         = iws.sim.Simulator(dir0, params, suffix=x)
-# # sim.clear_wd()
-# # sim.run_all()
-#
-#
-#
-# # J0          = 36
-# # sfx         = f'-{suffix}-{J0}'
-# # fname_results = os.path.join(wd, f'results{sfx}.npy')
-#
-#
-#
-
-
-
-
-
 
 
 
