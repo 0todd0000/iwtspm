@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'sigma_ratio'
 x           = [0.2, 0.25, 0.33, 0.5, 1, 2, 3, 4, 5]
-niter       = 100
+niter       = 1000
 seed        = 80
 
 

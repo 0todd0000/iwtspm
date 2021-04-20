@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'multipulse_width'
 x           = [4, 8, 12, 16, 20]
-niter       = 100
+niter       = 1000
 seed        = 62
 
 

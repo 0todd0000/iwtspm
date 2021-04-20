@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'skew'
 x           = list( range(-5,6) )
-niter       = 100
+niter       = 1000
 seed        = 82
 
 

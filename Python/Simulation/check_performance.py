@@ -23,12 +23,14 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
 wd            = '/Users/todd/Desktop/Working/'
 simname       = 'samplesize'
 simname       = 'unbalanced'
-# simname       = 'signalwidth'
+simname       = 'signalamp'
+simname       = 'signalwidth'
+simname       = 'multipulsewidth'
 # simname       = 'fwhm'
 # simname       = 'fwhmratio'
 # simname       = 'sdratio'
 # simname       = 'unequalvar'
-# simname       = 'multipulsewidth'
+
 
 fname_results = os.path.join(wd, simname, '_results.npz')
 
@@ -37,10 +39,4 @@ fname_results = os.path.join(wd, simname, '_results.npz')
 plt.close('all')
 iws.perf.plot_performance_results( fname_results, uxtransform=None )
 plt.show()
-
-
-
-
-# fnamePDF   = os.path.join(dir0, 'results', f'fig-{suffix}.pdf')
-# plt.savefig( fnamePDF )
 
