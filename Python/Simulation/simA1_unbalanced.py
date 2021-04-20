@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'nA'
 x           = list( range(4,37,2) )
-niter       = 10
+niter       = 100
 seed        = 51
 
 

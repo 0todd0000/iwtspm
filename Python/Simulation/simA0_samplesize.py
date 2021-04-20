@@ -3,13 +3,10 @@ import iwtspm as iws
 
 
 
-
-
-
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'sample_size'
 x           = [5, 10, 15, 20, 25, 30, 40, 50, 80]
-niter       = 10
+niter       = 100
 seed        = 50
 
 
