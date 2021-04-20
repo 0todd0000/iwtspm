@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'signal_width'
 x           = [5, 10, 20, 30, 40, 50, 60]
-niter       = 1000
+niter       = 10
 seed        = 61
 
 

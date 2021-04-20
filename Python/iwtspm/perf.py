@@ -7,6 +7,7 @@ from math import floor
 import numpy as np
 from matplotlib import pyplot as plt
 from . sim import SimulationParameters
+from . import signal as iwssignal
 
 
 
@@ -44,6 +45,10 @@ def get_domain(Q, width, sig_fallw=5):
 	return domain
 
 
+def get_multipulse_domain(Q=101, q=[20,50,80], w=20):
+	a = iwssignal.multi_pulse(Q=Q, q=q, w=w)
+	return np.asarray(a, dtype=bool)
+
 
 def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
 	# load simulation results:
@@ -52,23 +57,31 @@ def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
 		param_values = Z['param_values']
 		proc         = Z['proc']
 		p            = np.asarray(Z['p'], dtype=float) / 10000
-	# calculate performance: 
-	Q          = p.shape[1]
-	uproc      = np.unique(proc)
-	x,ux       = param_values, np.unique( param_values )
-	domain     = get_domain(Q, 40, sig_fallw=3)
-	perf       = np.array([[performance( p[(proc==prc) & (x==u)] , domain, alpha)  for prc in uproc] for u in ux])
+	# calculate performance:
+	Q           = p.shape[1]
+	uproc       = np.unique(proc)
+	x,ux        = param_values, np.unique( param_values )
+	if param_name == 'signal_width':
+		domains = [get_domain(Q, x, sig_fallw=5)  for x in ux]
+		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+	elif param_name == 'multipulse_width':
+		domains = [get_multipulse_domain(Q=101, q=[20,50,80], w=x)  for x in ux]
+		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+	else:
+		domain  = get_domain(Q, 40, sig_fallw=5)
+		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , domain, alpha)  for prc in uproc] for u in ux])
 	# get baseline value:
-	params     = SimulationParameters()
-	blvalue    = params[param_name]
+	params      = SimulationParameters()
+	blvalue     = params[param_name]
 	# plot:
-	fig,AX     = plt.subplots(1, 2, figsize=(8,3))
-	ax0,ax1    = AX
-	uxt        = ux if (uxtransform is None) else uxtransform(ux)
-	blvaluet   = blvalue if (uxtransform is None) else uxtransform(blvalue)
+	fig,AX      = plt.subplots(1, 2, figsize=(8,3))
+	ax0,ax1     = AX
+	uxt         = ux if (uxtransform is None) else uxtransform(ux)
 	ax0.plot( uxt, perf[:,:,0] )
 	ax1.plot( uxt, perf[:,:,1] )
-	[ax.axvline( blvaluet, color='k', ls='--')  for ax in AX]
+	if blvalue is not None:
+		blvaluet = blvalue if (uxtransform is None) else uxtransform(blvalue)
+		[ax.axvline( blvaluet, color='k', ls='--')  for ax in AX]
 	# annotate:
 	ax0.legend( ['Unadjusted', 'IWT', 'SPM', 'SnPM'] )
 	[ax.set_ylim(-0.05, 1.05)  for ax in AX]

@@ -14,6 +14,7 @@ def multi_pulse(Q=101, q=[50], w=10, wfall=5):
 		a      += b
 	return a
 
+
 def sigmoid_step(Q=101, q0=50, q1=75, x0=0, x1=1):
 	z          = np.zeros(Q)
 	zz         = 6
@@ -24,7 +25,6 @@ def sigmoid_step(Q=101, q0=50, q1=75, x0=0, x1=1):
 	y          = (y - y[0]) / (y[-1]-y[0])
 	y          = x0 + (y * (x1-x0))
 	return y
-
 
 
 def sigmoid_pulse(Q=101, q0=50, w=10, wfall=5, amp=1):

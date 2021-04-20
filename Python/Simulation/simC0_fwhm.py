@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'fwhm'
 x           = [3, 10, 20, 30, 40, 50, 60]
-niter       = 1000
+niter       = 10
 seed        = 70
 
 

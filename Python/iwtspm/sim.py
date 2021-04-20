@@ -54,10 +54,12 @@ class SimulationParameters(dict):
 	def __getitem__(self, key):
 		if key=='sample_size':
 			return 20
+		elif key=='nB':
+			return self.nB
 		elif key=='multipulse_width':
 			return None
 		else:
-			return self[key]
+			return super().__getitem__(key)
 	
 	def __setitem__(self, key, value):
 		if key=='sample_size':
