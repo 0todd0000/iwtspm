@@ -1,5 +1,5 @@
 
-import os
+import os,unipath
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -14,7 +14,8 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
 
 
 
-wd             = '/Users/todd/Desktop/Working100/'
+dirREPO        = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dir0           = os.path.join( dirREPO, 'Data', 'Simulation')
 perf_variable  = 'FPR'
 perf_variable  = 'Sensitivity'
 
@@ -45,7 +46,7 @@ plt.get_current_fig_manager().window.move(0, 0)
 n              = 0
 for i,rowsimnames in enumerate(simnames):
 	for ii,simname in enumerate(rowsimnames):
-		fname_results   = os.path.join(wd, simname, '_results.npz')
+		fname_results   = os.path.join(dir0, simname, '_results.npz')
 		ux,perf,blvalue = iws.perf.load_sim_results(fname_results, alpha=0.05)
 		ax              = AX[i,ii]
 		
