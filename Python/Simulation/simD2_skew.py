@@ -4,10 +4,10 @@ import iwtspm as iws
 
 
 wd          = '/Users/todd/Desktop/Working/'
-pname       = 'signal_amp'
-x           = [0, 0.5, 1, 1.5, 2.0, 2.5, 3]
-niter       = 10000
-seed        = 136
+pname       = 'skew'
+x           = list( range(-5,6) )
+niter       = 1000
+seed        = 82
 
 
 

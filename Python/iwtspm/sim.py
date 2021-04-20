@@ -19,23 +19,29 @@ from . import signal as iwssignal
 class SimulationParameters(dict):
 	
 	def __init__(self):
-		d                  = {}
-		d['Q']             = 101      # number of continuum points
-		d['nA']            = 20       # sample size (Group A)
-		d['nTotal']        = 40       # total sample size (GroupA + Group B)
-		d['niter']         = 1000     # number of simulation iterations (datasets)
-		d['sigmaA']        = 1        # standard deviation (Group A)
-		d['sigmaB']        = 1        # standard deviation (Group B)
-		d['sigma_ratio']   = 1        # standard deviation ration (inside:outside signal region)
-		d['error_type']    = 'Gauss'  # error model
-		d['signal_amp']    = 1        # signal amplitude
-		d['signal_center'] = 50       # signal center
-		d['signal_fall']   = 5        # signal sigmoid falloff width
-		d['signal_width']  = 40       # signal width
-		d['fwhm']          = 20       # smoothness
-		d['fwhm_ratio']    = 1        # smoothness ration (inside:outside signal region)
+		d                     = {}
+		# main parameters:
+		d['Q']                = 101      # number of continuum points
+		d['niter']            = 1000     # number of simulation iterations (datasets)
+		# sample size parameters: 
+		d['nA']               = 20       # sample size (Group A)
+		d['nTotal']           = 40       # total sample size (GroupA + Group B)
+		# signal parameters: 
+		d['signal_amp']       = 1        # signal amplitude
+		d['signal_center']    = 50       # signal center
+		d['signal_fall']      = 5        # signal sigmoid falloff width
+		d['signal_width']     = 40       # signal width
+		d['mpwidth']          = None     # signal width (multipulse case)
+		# smoothness parameters:
+		d['fwhm']             = 20       # smoothness
+		d['fwhm_ratio']       = 1        # smoothness ratio (D0:D1)
+		# variance parameters:
+		d['skew']             = None     # skewness parameter alpha
+		d['sigmaA']           = 1        # standard deviation (Group A)
+		d['sigmaB']           = 1        # standard deviation (Group B)
+		d['sigma_ratio']      = 1        # standard deviation ratio (D0:D1)
 		super().__init__( **d )
-		self.__dict__      = self
+		self.__dict__         = self
 
 	def __repr__(self):
 		s  = 'SimulationParameters\n'
@@ -44,6 +50,24 @@ class SimulationParameters(dict):
 			k  = key.ljust(n)
 			s +=  f'  {k} : {value}\n'
 		return s
+
+	def __getitem__(self, key):
+		if key=='sample_size':
+			return 20
+		elif key=='multipulse_width':
+			return None
+		else:
+			return self[key]
+	
+	def __setitem__(self, key, value):
+		if key=='sample_size':
+			self['nA']     = value
+			self['nTotal'] = 2 * value
+		elif key=='multipulse_width':
+			self['signal_amp']        = 0
+			self['mpwidth']  = value
+		else:
+			super().__setitem__(key, value)
 
 	@property
 	def nB(self):
@@ -77,15 +101,23 @@ class Simulator(object):
 		Q,q0         = params.Q, params.signal_center
 		nA,nB        = params.nA, params.nB
 		w,wf         = params.signal_width, params.signal_fall
-		sd,sdr       = params.sigmaB, params.sigma_ratio
+		# sd,sdr       = params.sigmaB, params.sigma_ratio
+		sdA,sdB,sdr  = params.sigmaA, params.sigmaB, params.sigma_ratio
 		fwhm,fwhmr   = params.fwhm, params.fwhm_ratio
 		sig_amp      = params.signal_amp
 		sig_width    = params.signal_width
 		### create variance and smoothness continua:
-		sigma        = iwssignal.sigmoid_pulse_amps( Q=Q, q0=q0, w=w, wfall=wf, amp0=(sd*sdr), amp1=sd )
+		sigma        = iwssignal.sigmoid_pulse_amps( Q=Q, q0=q0, w=w, wfall=wf, amp0=(sdB*sdr), amp1=sdB )
 		fwhm         = iwssignal.sigmoid_pulse_amps( Q=Q, q0=q0, w=w, wfall=wf, amp0=(fwhm*fwhmr), amp1=fwhm)
+		### assemble error distribution type and parameters:
+		if params.skew is None:
+			dist     = 'gauss_matern'
+			dparams  = (sigma, fwhm)
+		else:
+			dist     = 'skewed'
+			dparams  = (params.skew,)
 		### create a random number generator:
-		self.gen     = lambda: iwsrand.generate_dataset(Q, sample_sizes=(nA,nB), sigma=(sd,sd), sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(sigma,fwhm))
+		self.gen     = lambda: iwsrand.generate_dataset(Q, sample_sizes=(nA,nB), sigma=(sdA,sdB), sig_amp=sig_amp, sig_width=sig_width, dist=dist, distparams=dparams, multipulse_width=params.mpwidth)
 
 
 	@property

@@ -8,7 +8,7 @@ import numpy as np
 from scipy import stats
 from scipy.special import gamma
 from scipy.special import kv as besselk
-from . import signal
+from . import signal as iwssignal
 from spm1d import rft1d
 
 eps         = np.finfo(np.float).eps
@@ -114,7 +114,7 @@ def randn1d_matern(n, p, s=1, fwhm=10, order=5):
 
 	
 
-def generate_dataset(Q, sample_sizes=(20,20), sigma=(1,1), sig_amp=1, sig_width=10, dist='gauss', distparams=None):
+def generate_dataset(Q, sample_sizes=(20,20), sigma=(1,1), sig_amp=1, sig_width=10, dist='gauss', distparams=None, multipulse_width=None):
 	nA,nB   = sample_sizes
 	ntotal  = nA + nB
 	if dist == 'gauss_matern':
@@ -124,8 +124,11 @@ def generate_dataset(Q, sample_sizes=(20,20), sigma=(1,1), sig_amp=1, sig_width=
 	elif dist == 'skewed':
 		rng = lambda: skewed1d( ntotal , Q , alpha=distparams[0] )
 	m0  = np.zeros( Q )
-	m1  = signal.sigmoid_pulse(Q=Q, q0=50, w=sig_width, wfall=5, amp=sig_amp)
+	m1  = iwssignal.sigmoid_pulse(Q=Q, q0=50, w=sig_width, wfall=5, amp=sig_amp)
 	y   = rng()
 	y0  = m0 + sigma[0]*y[:nA]
 	y1  = m1 + sigma[1]*y[nA:]
+	if multipulse_width is not None:
+		sig = iwssignal.multi_pulse(Q=101, q=[20, 50, 80], w=multipulse_width, wfall=5)
+		y1  = y1 + sig
 	return y0, y1

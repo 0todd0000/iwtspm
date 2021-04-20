@@ -4,10 +4,10 @@ import iwtspm as iws
 
 
 wd          = '/Users/todd/Desktop/Working/'
-pname       = 'nA'
-x           = list( range(4,37,2) )
-niter       = 10000
-seed        = 127
+pname       = 'fwhm'
+x           = [3, 10, 20, 30, 40, 50, 60]
+niter       = 1000
+seed        = 70
 
 
 
