@@ -50,7 +50,7 @@ def get_multipulse_domain(Q=101, q=[20,50,80], w=20):
 	return np.asarray(a, dtype=bool)
 
 
-def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
+def load_sim_results(fname_results, alpha=0.05):
 	# load simulation results:
 	with np.load(fname_results) as Z:
 		param_name   = str( Z['param_name'] )
@@ -73,6 +73,33 @@ def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
 	# get baseline value:
 	params      = SimulationParameters()
 	blvalue     = params[param_name]
+	return ux,perf,blvalue
+
+
+def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
+	# # load simulation results:
+	# with np.load(fname_results) as Z:
+	# 	param_name   = str( Z['param_name'] )
+	# 	param_values = Z['param_values']
+	# 	proc         = Z['proc']
+	# 	p            = np.asarray(Z['p'], dtype=float) / 10000
+	# # calculate performance:
+	# Q           = p.shape[1]
+	# uproc       = np.unique(proc)
+	# x,ux        = param_values, np.unique( param_values )
+	# if param_name == 'signal_width':
+	# 	domains = [get_domain(Q, x, sig_fallw=5)  for x in ux]
+	# 	perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+	# elif param_name == 'multipulse_width':
+	# 	domains = [get_multipulse_domain(Q=101, q=[20,50,80], w=x)  for x in ux]
+	# 	perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+	# else:
+	# 	domain  = get_domain(Q, 40, sig_fallw=5)
+	# 	perf    = np.array([[performance( p[(proc==prc) & (x==u)] , domain, alpha)  for prc in uproc] for u in ux])
+	# # get baseline value:
+	# params      = SimulationParameters()
+	# blvalue     = params[param_name]
+	ux,perf,blvalue = load_sim_results(fname_results, alpha=alpha)
 	# plot:
 	fig,AX      = plt.subplots(1, 2, figsize=(8,3))
 	ax0,ax1     = AX

@@ -15,17 +15,17 @@ mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
 
-colors        = ['0.7', 'b', 'c', 'm']
+colors        = ['0.7', 'm', 'b', 'c']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
 
 
 
-wd            = '/Users/todd/Desktop/Working/'
+wd            = '/Users/todd/Desktop/Working100/'
 simname       = 'samplesize'
-simname       = 'unbalanced'
-simname       = 'signalamp'
-simname       = 'signalwidth'
-simname       = 'multipulsewidth'
+# simname       = 'unbalanced'
+# simname       = 'signalamp'
+# simname       = 'signalwidth'
+# simname       = 'multipulsewidth'
 # simname       = 'fwhm'
 # simname       = 'fwhmratio'
 # simname       = 'sdratio'
