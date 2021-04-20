@@ -47,6 +47,8 @@ n              = 0
 for i,rowsimnames in enumerate(simnames):
 	for ii,simname in enumerate(rowsimnames):
 		fname_results   = os.path.join(dir0, simname, '_results.npz')
+		if not os.path.exists(fname_results):
+			fname_results   = os.path.join(dir0, simname, '_results100.npz')
 		ux,perf,blvalue = iws.perf.load_sim_results(fname_results, alpha=0.05)
 		ax              = AX[i,ii]
 		
