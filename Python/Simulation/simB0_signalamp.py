@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'signal_amp'
 x           = [0, 0.5, 1, 1.5, 2.0, 2.5, 3]
-niter       = 1000
+niter       = 10000
 seed        = 60
 
 

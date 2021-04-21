@@ -6,7 +6,7 @@ import iwtspm as iws
 wd          = '/Users/todd/Desktop/Working/'
 pname       = 'sigmaA'
 x           = [0.2, 0.25, 0.33, 0.5, 1, 2, 3, 4, 5]
-niter       = 1000
+niter       = 10000
 seed        = 81
 
 
