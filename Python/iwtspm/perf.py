@@ -5,11 +5,16 @@ Performance metrics and convenience summary functions
 
 from math import floor
 import numpy as np
+from statsmodels.stats.multitest import fdrcorrection
 from matplotlib import pyplot as plt
 from . sim import SimulationParameters
 from . import signal as iwssignal
 
 
+
+def fdr_corrected_pvalues(p, alpha=0.05):
+	pfdr = fdrcorrection(p, alpha=alpha, method='indep', is_sorted=False)[1]
+	return pfdr
 
 def fpr(p, domain, alpha=0.05):
 	pnd  = p[:, np.logical_not(domain)]
@@ -51,12 +56,14 @@ def get_multipulse_domain(Q=101, q=[20,50,80], w=20):
 
 
 def load_sim_results(fname_results, alpha=0.05):
+	# define an FDR correction function:
+	fdrc = lambda p: np.array([fdr_corrected_pvalues(pp, alpha=alpha)  for pp in p])
 	# load simulation results:
 	with np.load(fname_results) as Z:
 		param_name   = str( Z['param_name'] )
 		param_values = Z['param_values']
 		proc         = Z['proc']
-		p            = np.asarray(Z['p'], dtype=float) / 10000
+		p            = np.asarray(Z['p'], dtype=float) / 10000   # rescaled p values (p values saved as integers for smaller file sizes)
 	# calculate performance:
 	Q           = p.shape[1]
 	uproc       = np.unique(proc)
@@ -64,16 +71,19 @@ def load_sim_results(fname_results, alpha=0.05):
 	if param_name == 'signal_width':
 		domains = [get_domain(Q, x, sig_fallw=5)  for x in ux]
 		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+		perffdr = np.array([performance(   fdrc(  p[(proc==0) & (x==u)]  ), d, alpha)    for u,d in zip(ux,domains)])
 	elif param_name == 'multipulse_width':
 		domains = [get_multipulse_domain(Q=101, q=[20,50,80], w=x)  for x in ux]
 		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , d, alpha)  for prc in uproc] for u,d in zip(ux,domains)])
+		perffdr = np.array([performance(   fdrc(  p[(proc==0) & (x==u)]  ), d, alpha)    for u,d in zip(ux,domains)])
 	else:
 		domain  = get_domain(Q, 40, sig_fallw=5)
 		perf    = np.array([[performance( p[(proc==prc) & (x==u)] , domain, alpha)  for prc in uproc] for u in ux])
+		perffdr = np.array([performance(   fdrc(  p[(proc==0) & (x==u)]  ), domain, alpha)    for u in ux])
 	# get baseline value:
-	params      = SimulationParameters()
-	blvalue     = params[param_name]
-	return ux,perf,blvalue
+	blvalue     = SimulationParameters()[param_name]
+	return ux,perf,perffdr,blvalue
+
 
 
 def plot_performance_results(fname_results, alpha=0.05, uxtransform=None):
