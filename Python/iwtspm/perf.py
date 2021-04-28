@@ -11,6 +11,9 @@ from . sim import SimulationParameters
 from . import signal as iwssignal
 
 
+def snpm_correct_pvalues(p):
+	return np.minimum(2*p, 1)
+
 
 def fdr_corrected_pvalues(p, alpha=0.05):
 	pfdr = fdrcorrection(p, alpha=alpha, method='indep', is_sorted=False)[1]
@@ -64,6 +67,8 @@ def load_sim_results(fname_results, alpha=0.05):
 		param_values = Z['param_values']
 		proc         = Z['proc']
 		p            = np.asarray(Z['p'], dtype=float) / 10000   # rescaled p values (p values saved as integers for smaller file sizes)
+	# correct the SnPM results (one-tailed, make them two-tailed):
+	p[proc==3]  = snpm_correct_pvalues( p[proc==3] )
 	# calculate performance:
 	Q           = p.shape[1]
 	uproc       = np.unique(proc)
