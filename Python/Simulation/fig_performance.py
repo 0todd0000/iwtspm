@@ -14,8 +14,7 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
 
 
 
-dirREPO        = unipath.Path( os.path.dirname(__file__) ).parent.parent
-dir0           = os.path.join( dirREPO, 'Data', 'Simulation')
+dir0           = os.path.join( iws.dirREPO, 'Data', 'Simulation')
 perf_variable  = 'FPR'
 perf_variable  = 'Sensitivity'
 
@@ -51,13 +50,13 @@ for i,rowsimnames in enumerate(simnames):
 			fname_results   = os.path.join(dir0, simname, '_results100.npz')
 		ux,perf,blvalue = iws.perf.load_sim_results(fname_results, alpha=0.05)
 		ax              = AX[i,ii]
-		
+
 		yperf  = perf[:,:,perfvarind]
 		if simname == 'signalamp':
 			ux,yperf = ux[1:], yperf[1:]
-		
+
 		if simname in ['fwhmratio', 'sdratio', 'unequalvar']:
-			uxs = ['1/5', '1/4', '1/3', '1/2', 1, 2, 3, 4, 5] 
+			uxs = ['1/5', '1/4', '1/3', '1/2', 1, 2, 3, 4, 5]
 			ux  = [-3, -2, -1, 0, 1, 2, 3, 4, 5]
 			ax.plot( ux, yperf )
 			plt.setp(ax, xticks=ux, xticklabels=uxs)
@@ -67,11 +66,11 @@ for i,rowsimnames in enumerate(simnames):
 		blvalue = 0 if simname=='skew' else blvalue
 		if blvalue is not None:
 			ax.axvline( blvalue, color='k', ls='--')
-		
+
 		ax.set_xlabel( simlabels[i][ii] )
 		ax.text(0.03, 0.92, '(%s)'%chr(97+n), transform=ax.transAxes)
 		n+=1
-		
+
 plt.setp(AX, ylim=(-0.05,1))
 [ax.set_visible(False)  for ax in [AX[0,2],AX[2,2]]]
 [ax.set_ylabel(perf_variable)   for ax in AX[:,0]]
