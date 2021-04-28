@@ -24,10 +24,12 @@ p_unadjusted = p[ (proc==0) & i ]
 p_iwt        = p[ (proc==1) & i ]
 p_spm        = p[ (proc==2) & i ]
 p_snpm       = iws.perf.snpm_correct_pvalues( p[ (proc==3) & i ] )
+p_fdr        = np.array([iws.perf.fdr_corrected_pvalues(pp, alpha=alpha)  for pp in p_unadjusted])
 
-labels       = 'Unadjusted', 'IWT', 'SPM', 'SnPM'
+
+labels       = 'Unadjusted', 'IWT', 'SPM', 'SnPM', 'FDR'
 for i,label in enumerate(labels):
-	pp       = p[ (proc==i) & (param_values==0) ]
+	pp       = p_fdr if (label=='FDR') else p[ (proc==i) & (param_values==0) ]
 	if label=='SnPM':
 		pp   = iws.perf.snpm_correct_pvalues( pp )
 	fwer     = np.any(pp<alpha, axis=1).mean()
@@ -36,6 +38,5 @@ for i,label in enumerate(labels):
 
 
 
-# pp    = np.array([   for i in range(nproc)])
-#
-# b = (pp<alpha).mean(axis=1).mean(axis=1)
+
+
