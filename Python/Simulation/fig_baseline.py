@@ -94,8 +94,7 @@ plt.tight_layout()
 plt.show()
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
-dirFIG        = os.path.join( dirREPO, 'Figures', 'Simulation')
+dirFIG        = os.path.join( iws.dirREPO, 'Figures', 'Simulation')
 dirFIG        = os.path.join(dirFIG, 'bw') if grayscale else dirFIG
 fname_fig     = os.path.join( dirFIG, 'fig_baseline.pdf')
 plt.savefig(fname_fig)
