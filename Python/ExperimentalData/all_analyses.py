@@ -17,6 +17,7 @@ from scipy import stats
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 import spm1d
+import iwtspm as iws
 
 
 plt.style.use('bmh')
@@ -24,13 +25,22 @@ mpl.rcParams['xtick.labelsize'] = 'small'
 mpl.rcParams['ytick.labelsize'] = 'small'
 mpl.rcParams['font.sans-serif'] = 'Arial'
 
-colors     = ['0.89', 'k', '0.0', '0.5']
-markers    = ['o', 'o', 's', '^']
-markers    = ['', '', '', '']
-mfcs       = ['0.7', 'k', '0.0', '1.0']
-lss       = ['-', '-', '--', '--']
-lws       = [3, 2, 2, 1.5]
-plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+
+grayscale   = False
+
+if grayscale:
+	colors0 = ['k', '0.7']
+	colors  = ['0.89', 'k', '0.0', '0.5', '0.5']
+	# markers = ['o', 'o', 's', '^', 'o']
+else:
+	colors0 = ['k', 'c']
+	colors  = ['0.7', 'm', 'b', 'c', 'k']
+# markers     = ['', '', '', '', '']
+# mfcs        = ['0.7', 'k', '0.0', '1.0', '1.0']
+lss         = ['-', '-', '--', '--', ':']
+lws         = [3, 2, 2, 1.5, 1.5]
+# plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, ls=lss, lw=lws)
 
 
 
@@ -50,6 +60,7 @@ def calc_p_unadjusted(y0, y1):
 	p            = stats.f.sf(z**2, 1, df)
 	return p
 
+
 def calc_p_adjusted_spm(y0, y1):
 	spm          = spm1d.stats.ttest2(y0, y1, equal_var=False)
 	z,df         = spm.z, spm.df[1]
@@ -68,6 +79,7 @@ def calc_p_adjusted_snpm(y0, y1, niter=1000):
 	p          = np.array([ (pdf > z).mean() for z in snpmi.z])
 	return p
 
+
 def calc_p_adjusted_iwt(fname_data, seed=1, niter=1000):
 	fname_Rscript     = os.path.join( dirREPO, 'R', 'run_iwt_two_tailed.R')
 	fname_iwt_results = os.path.join( os.path.curdir , 'temp_iwt_results.csv' )
@@ -76,16 +88,17 @@ def calc_p_adjusted_iwt(fname_data, seed=1, niter=1000):
 	os.remove( fname_iwt_results )
 	return p
 
-def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=None):
+
+def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=None):
 	fig,AX  = plt.subplots( 1, 2, figsize=(8,3) )
 	plt.get_current_fig_manager().window.move(0, 0)
 	ax0,ax1 = AX.flatten()
 	q       = np.linspace(0, 1, p_unadjusted.size)
 	### plot dataset:
-	ax0.plot( q, y0.T, 'k', ls='-', lw=0.3 )
-	ax0.plot( q, y1.T, '0.7', ls='-', lw=0.5 )
-	ax0.plot( q, y0.mean(axis=0), 'k', lw=5, label='Mean A' )
-	ax0.plot( q, y1.mean(axis=0), '0.7', lw=5, label='Mean B' )
+	ax0.plot( q, y0.T, color=colors0[0], ls='-', lw=0.3 )
+	ax0.plot( q, y1.T, color=colors0[1], ls='-', lw=0.3 )
+	ax0.plot( q, y0.mean(axis=0), color=colors0[0], ls='-', lw=5, label='Mean A' )
+	ax0.plot( q, y1.mean(axis=0), color=colors0[1], ls='-', lw=5, label='Mean B' )
 	ax0.legend(facecolor='w')
 	if dv_label is not None:
 		ax0.set_ylabel( dv_label )
@@ -94,6 +107,7 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=None):
 	ax1.plot( q, p_iwt,  label='IWT')
 	ax1.plot( q, p_spm,  label='SPM')
 	ax1.plot( q, p_snpm, label='SnPM')
+	ax1.plot( q, p_fdr,  label='FDR')
 	ax1.axhline(0.05, color='0.85', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
 
 
@@ -119,11 +133,12 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=None):
 # p_spm              = calc_p_adjusted_spm(y0, y1)
 # p_snpm             = calc_p_adjusted_snpm(y0, y1)
 # p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+# p_fdr              = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
 # # p_iwt = 0.5 * np.ones(y0.shape[1])
 # plt.close('all')
-# plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label='Force (N)')
+# plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label='Force (N)')
 # plt.show()
-
+#
 
 
 
@@ -136,14 +151,18 @@ dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Kn
 for dataset_label, dv_label in zip(dataset_labels, dv_labels):
 	print( f'Processing {dataset_label}...')
 	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-	fname_fig     = os.path.join( dirREPO, 'Figures', 'ExperimentalData', '%s.pdf' %dataset_label)
+	if grayscale:
+		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'bw', '%s.pdf' %dataset_label)
+	else:
+		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'color', '%s.pdf' %dataset_label)
 	y0,y1         = load_csv(fname_data)
 	p_unadjusted  = calc_p_unadjusted(y0, y1)
 	p_spm         = calc_p_adjusted_spm(y0, y1)
 	p_snpm        = calc_p_adjusted_snpm(y0, y1)
 	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+	p_fdr         = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
 	plt.close('all')
-	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, dv_label=dv_label)
+	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=dv_label)
 	plt.show()
 	plt.savefig(fname_fig)
 
