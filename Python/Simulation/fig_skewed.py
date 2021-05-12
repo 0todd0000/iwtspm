@@ -3,7 +3,7 @@
 Create figure describing simulation methods for nonuniform data.
 '''
 
-import os,unipath
+import os
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -29,7 +29,7 @@ fwhm        = 20
 fwhm_ratio  = 1
 skew        = 5
 ### construct simulation objects:
-gen         = lambda : iws.random.generate_dataset(J, Q, sig_amp=0, sig_width=sig_width, dist='skewed', distparams=(skew,))
+gen         = lambda : iws.rand.generate_dataset(Q, sample_sizes=(J,J), sig_amp=0, sig_width=sig_width, dist='skewed', distparams=(skew,))
 y0,y1       = gen()
 y           = np.vstack( [y0,y1] )
 ### plot:
@@ -50,6 +50,6 @@ plt.show()
 
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO       = iws.dirREPO
 fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_skewed.pdf')
 plt.savefig(fname_fig)

@@ -11,7 +11,7 @@ Experimental data
 
 
 
-import os,unipath
+import os
 import numpy as np
 from scipy import stats
 import matplotlib as mpl
@@ -124,46 +124,46 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=None):
 
 
 
-# # (0) Analyze one dataset:
-# dataset_label      = 'Kautz1991a'
-# dirREPO            = unipath.Path( os.path.dirname(__file__) ).parent.parent
-# fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-# y0,y1              = load_csv(fname_data)
-# p_unadjusted       = calc_p_unadjusted(y0, y1)
-# p_spm              = calc_p_adjusted_spm(y0, y1)
-# p_snpm             = calc_p_adjusted_snpm(y0, y1)
-# p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-# p_fdr              = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
-# # p_iwt = 0.5 * np.ones(y0.shape[1])
-# plt.close('all')
-# plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label='Force (N)')
-# plt.show()
-#
+# (0) Analyze one dataset:
+dataset_label      = 'Kautz1991a'
+dirREPO            = iws.dirREPO
+fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+y0,y1              = load_csv(fname_data)
+p_unadjusted       = calc_p_unadjusted(y0, y1)
+p_spm              = calc_p_adjusted_spm(y0, y1)
+p_snpm             = calc_p_adjusted_snpm(y0, y1)
+p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+p_fdr              = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
+# p_iwt = 0.5 * np.ones(y0.shape[1])
+plt.close('all')
+plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label='Force (N)')
+plt.show()
 
 
 
 
 
-# (1) Analyze all datasets (and save figures):
-dirREPO           = unipath.Path( os.path.dirname(__file__) ).parent.parent
-dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
-dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
-for dataset_label, dv_label in zip(dataset_labels, dv_labels):
-	print( f'Processing {dataset_label}...')
-	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-	if grayscale:
-		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'bw', '%s.pdf' %dataset_label)
-	else:
-		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'color', '%s.pdf' %dataset_label)
-	y0,y1         = load_csv(fname_data)
-	p_unadjusted  = calc_p_unadjusted(y0, y1)
-	p_spm         = calc_p_adjusted_spm(y0, y1)
-	p_snpm        = calc_p_adjusted_snpm(y0, y1)
-	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-	p_fdr         = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
-	plt.close('all')
-	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=dv_label)
-	plt.show()
-	plt.savefig(fname_fig)
+
+# # (1) Analyze all datasets (and save figures):
+# dirREPO           = iws.dirREPO
+# dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
+# dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
+# for dataset_label, dv_label in zip(dataset_labels, dv_labels):
+# 	print( f'Processing {dataset_label}...')
+# 	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+# 	if grayscale:
+# 		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'bw', '%s.pdf' %dataset_label)
+# 	else:
+# 		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'color', '%s.pdf' %dataset_label)
+# 	y0,y1         = load_csv(fname_data)
+# 	p_unadjusted  = calc_p_unadjusted(y0, y1)
+# 	p_spm         = calc_p_adjusted_spm(y0, y1)
+# 	p_snpm        = calc_p_adjusted_snpm(y0, y1)
+# 	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+# 	p_fdr         = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
+# 	plt.close('all')
+# 	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=dv_label)
+# 	plt.show()
+# 	plt.savefig(fname_fig)
 
 

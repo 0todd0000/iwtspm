@@ -85,6 +85,8 @@ class Simulator(object):
 		self.simname = None
 		self.suffix  = suffix
 		self.wd      = wd
+		self.y0      = None
+		self.y1      = None
 		# self._init_wd()
 		self._init_gen()
 		
@@ -142,6 +144,9 @@ class Simulator(object):
 		self.y1     = None
 
 
+	def get_data(self):
+		return self.y0, self.y1
+	
 	def plot_iteration(self, y0, y1, p0, p1, p2, p3):
 		fig,AX  = plt.subplots( 1, 2, figsize=(8,3), constrained_layout=True )
 		ax0,ax1 = AX.flatten()
@@ -165,6 +170,8 @@ class Simulator(object):
 	
 	def run_iteration(self, plot=False, clean=False):
 		y0,y1    = self.random()
+		self.y0  = y0
+		self.y1  = y1
 		p0       = iwsprob.p_unadjusted(y0, y1)
 		p1       = iwsprob.p_iwt(y0, y1, niter=1000, fname_data=self.filepath_data, fname_results=self.filepath_iwt)
 		p2       = iwsprob.p_spm(y0, y1)

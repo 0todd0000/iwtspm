@@ -3,14 +3,11 @@
 Create figure describing domain definition for simulation results.
 '''
 
-import os,unipath
-
-
+import os
 from math import floor
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
-# import power1d
 import iwtspm as iws
 
 plt.style.use('bmh')
@@ -67,6 +64,6 @@ plt.show()
 
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO       = iws.dirREPO
 fname_fig     = os.path.join( dirREPO, 'Figures', 'Simulation', 'fig_domain.pdf')
 plt.savefig(fname_fig)

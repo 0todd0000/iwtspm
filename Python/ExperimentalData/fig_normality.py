@@ -5,13 +5,15 @@ Estimate smoothness (FWHM) for all experimental datasets.
 
 
 
-import os,unipath
+import os
 from math import log
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 eps = np.finfo(np.float).eps
 import spm1d
+import iwtspm as iws
+
 
 plt.style.use('bmh')
 mpl.rcParams['xtick.labelsize'] = 'small'
@@ -29,7 +31,7 @@ def load_csv(fnameCSV):
 
 
 # Estimate non-normality for all datasets:
-dirREPO           = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO           = iws.dirREPO
 dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
 spms              = []
 for dataset_label in dataset_labels:

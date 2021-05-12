@@ -3,7 +3,7 @@
 Create figure describing simulation methods for nonuniform data.
 '''
 
-import os,unipath
+import os
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -27,40 +27,26 @@ if grayscale:
 
 
 
-def generate_dataset_multipulse(pwidth=12, sd=1, fwhm=20):
-	y0,y1  = iws.random.generate_dataset(J, Q, sig_amp=0, sig_width=pwidth, dist='gauss_matern', distparams=(sd,fwhm))
-	sig    = iws.signal.multi_pulse(Q=101, q=[20, 50, 80], w=pwidth, wfall=5)
-	y1     = y1 + sig
-	return y0,y1
-
-
-
 #(0) Run a single iteration:
 np.random.seed(3)
 wd          = os.path.join( os.path.dirname( __file__ ) , '_wd' )
-### set baseline parameters:
-Q           = 101
-J           = 20
-sd          = 1
-fwhm        = 20
-pwidth      = 12
+params      = iws.sim.SimulationParameters()
+params['multipulse_width'] = 12
 run_tests   = True
-### construct simulation objects:
-gen         = lambda : generate_dataset_multipulse(pwidth, sd, fwhm)
+sim         = iws.sim.Simulator(wd, params, suffix='')
 if run_tests:
-	sim         = iws.sim.Simulator(wd, gen, suff='')
 	sim.clear_wd()
 	p0,p1,p2,p3 = sim.run_iteration()
 	y0,y1       = sim.get_data()
 else:
-	y0,y1   = gen()
+	y0,y1   = sim.random()
 ### plot:
 plt.close('all')
 fig,AX = plt.subplots( 1, 2, figsize=(8,3) )
 plt.get_current_fig_manager().window.move(0, 0)
 ax0,ax1 = AX.flatten()
 ### plot dataset:
-q   = np.linspace(0, 1, Q)
+q   = np.linspace(0, 1, params.Q)
 c0,c1 = ('k','0.7') if grayscale else ('k','r')
 ax0.plot(q,  y0.T, color=c0, lw=0.3 )
 ax0.plot(q,  y1.T, color=c1, lw=0.5 )
@@ -98,7 +84,7 @@ plt.tight_layout()
 plt.show()
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO       = iws.dirREPO
 dirFIG        = os.path.join( dirREPO, 'Figures', 'Simulation')
 dirFIG        = os.path.join(dirFIG, 'bw') if grayscale else dirFIG
 fname_fig     = os.path.join( dirFIG, 'fig_multipulse.pdf')

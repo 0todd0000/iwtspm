@@ -7,17 +7,17 @@ Experimental data
 
 
 
-import os,unipath
+import os
 import numpy as np
 from matplotlib import pyplot as plt
+import iwtspm as iws
 
 
 
 # Specify file names and parameters:
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
-fname_Rscript = os.path.join( dirREPO, 'R', 'run_iwt_two_tailed.R')
-fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', 'Kautz1991a.csv')
-fname_results = os.path.join( dirREPO, 'R', 'iwt.csv')
+fname_Rscript = os.path.join( iws.dirREPO, 'R', 'run_iwt_two_tailed.R')
+fname_data    = os.path.join( iws.dirREPO, 'Data', 'ExperimentalData', 'Kautz1991a.csv')
+fname_results = os.path.join( iws.dirREPO, 'R', 'iwt.csv')
 seed          = 1     # rng seed
 niter         = 1000  # number of IWT iterations
 

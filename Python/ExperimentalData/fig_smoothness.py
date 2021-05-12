@@ -5,11 +5,13 @@ Estimate smoothness (FWHM) for all experimental datasets.
 
 
 
-import os,unipath
+import os
 from math import log
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
+import iwtspm as iws
+
 eps = np.finfo(np.float).eps
 
 plt.style.use('bmh')
@@ -63,7 +65,7 @@ def load_csv(fnameCSV):
 
 
 # Estimate FWHM for all datasets:
-dirREPO           = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO           = iws.dirREPO
 dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
 w                 = []
 for dataset_label in dataset_labels:

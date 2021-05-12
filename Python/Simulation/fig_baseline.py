@@ -3,7 +3,7 @@
 Create figure describing simulation methods for nonuniform data.
 '''
 
-import os,unipath
+import os
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt

@@ -5,7 +5,7 @@ Create figure describing simulation methods for nonuniform data.
 
 
 
-import os,unipath
+import os
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -45,8 +45,8 @@ fwhm_ratio1 = 4
 s           = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(sd*sd_ratio), amp1=sd )
 w0          = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(fwhm*fwhm_ratio0), amp1=fwhm)
 w1          = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(fwhm*fwhm_ratio1), amp1=fwhm)
-gen0        = lambda: iws.random.generate_dataset(J, Q, sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(s,w0))
-gen1        = lambda: iws.random.generate_dataset(J, Q, sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(s,w1))
+gen0        = lambda: iws.rand.generate_dataset(Q, sample_sizes=(J,J), sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(s,w0))
+gen1        = lambda: iws.rand.generate_dataset(Q, sample_sizes=(J,J), sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(s,w1))
 yA0,yA1     = gen0()
 yB0,yB1     = gen1()
 
@@ -83,7 +83,7 @@ plt.tight_layout()
 plt.show()
 
 
-dirREPO       = unipath.Path( os.path.dirname(__file__) ).parent.parent
+dirREPO       = iws.dirREPO
 dirFIG        = os.path.join( dirREPO, 'Figures', 'Simulation')
 dirFIG        = os.path.join(dirFIG, 'bw') if grayscale else dirFIG
 fname_fig     = os.path.join( dirFIG, 'fig_nonuniform.pdf')
