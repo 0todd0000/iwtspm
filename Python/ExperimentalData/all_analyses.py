@@ -31,15 +31,11 @@ grayscale   = False
 if grayscale:
 	colors0 = ['k', '0.7']
 	colors  = ['0.89', 'k', '0.0', '0.5', '0.5']
-	# markers = ['o', 'o', 's', '^', 'o']
 else:
 	colors0 = ['k', 'c']
 	colors  = ['0.7', 'm', 'b', 'c', 'k']
-# markers     = ['', '', '', '', '']
-# mfcs        = ['0.7', 'k', '0.0', '1.0', '1.0']
 lss         = ['-', '-', '--', '--', ':']
 lws         = [3, 2, 2, 1.5, 1.5]
-# plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, ls=lss, lw=lws)
 
 
@@ -124,46 +120,46 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=None):
 
 
 
-# (0) Analyze one dataset:
-dataset_label      = 'Kautz1991a'
-dirREPO            = iws.dirREPO
-fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-y0,y1              = load_csv(fname_data)
-p_unadjusted       = calc_p_unadjusted(y0, y1)
-p_spm              = calc_p_adjusted_spm(y0, y1)
-p_snpm             = calc_p_adjusted_snpm(y0, y1)
-p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-p_fdr              = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
-# p_iwt = 0.5 * np.ones(y0.shape[1])
-plt.close('all')
-plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label='Force (N)')
-plt.show()
+# # (0) Analyze one dataset:
+# dataset_label      = 'Kautz1991a'
+# dirREPO            = iws.dirREPO
+# fname_data         = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+# y0,y1              = load_csv(fname_data)
+# p_unadjusted       = calc_p_unadjusted(y0, y1)
+# p_spm              = calc_p_adjusted_spm(y0, y1)
+# p_snpm             = calc_p_adjusted_snpm(y0, y1)
+# p_iwt              = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+# p_fdr              = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
+# # p_iwt = 0.5 * np.ones(y0.shape[1])
+# plt.close('all')
+# plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label='Force (N)')
+# plt.show()
 
 
 
 
 
 
-# # (1) Analyze all datasets (and save figures):
-# dirREPO           = iws.dirREPO
-# dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
-# dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
-# for dataset_label, dv_label in zip(dataset_labels, dv_labels):
-# 	print( f'Processing {dataset_label}...')
-# 	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
-# 	if grayscale:
-# 		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'bw', '%s.pdf' %dataset_label)
-# 	else:
-# 		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'color', '%s.pdf' %dataset_label)
-# 	y0,y1         = load_csv(fname_data)
-# 	p_unadjusted  = calc_p_unadjusted(y0, y1)
-# 	p_spm         = calc_p_adjusted_spm(y0, y1)
-# 	p_snpm        = calc_p_adjusted_snpm(y0, y1)
-# 	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
-# 	p_fdr         = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
-# 	plt.close('all')
-# 	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=dv_label)
-# 	plt.show()
-# 	plt.savefig(fname_fig)
+# (1) Analyze all datasets (and save figures):
+dirREPO           = iws.dirREPO
+dataset_labels    = ['Kautz1991a', 'Kautz1991b', 'Neptune1999', 'Besier2009a', 'Besier2009b', 'Dorn2012']
+dv_labels         = ['Normal pedal force (N)', 'Tangential pedal force (N)', 'Knee flexion (deg)', 'Semimembranosus force (N)', 'Medial gastrocnemius force (N)', 'Anterior ground reaction force (N)']
+for dataset_label, dv_label in zip(dataset_labels, dv_labels):
+	print( f'Processing {dataset_label}...')
+	fname_data    = os.path.join( dirREPO, 'Data', 'ExperimentalData', '%s.csv' %dataset_label)
+	if grayscale:
+		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'bw', '%s.pdf' %dataset_label)
+	else:
+		fname_fig = os.path.join( dirREPO, 'Figures', 'ExperimentalData', 'color', '%s.pdf' %dataset_label)
+	y0,y1         = load_csv(fname_data)
+	p_unadjusted  = calc_p_unadjusted(y0, y1)
+	p_spm         = calc_p_adjusted_spm(y0, y1)
+	p_snpm        = calc_p_adjusted_snpm(y0, y1)
+	p_iwt         = calc_p_adjusted_iwt(fname_data, seed=1, niter=1000)
+	p_fdr         = iws.perf.fdr_corrected_pvalues(p_unadjusted, alpha=0.05)
+	plt.close('all')
+	plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=dv_label)
+	plt.show()
+	plt.savefig(fname_fig)
 
 
