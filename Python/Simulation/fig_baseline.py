@@ -28,35 +28,23 @@ if grayscale:
 
 #(0) Run a single iteration:
 np.random.seed(2)
-wd          = os.path.join( os.path.dirname( __file__ ) , '_wd' )
-### set baseline parameters:
-Q           = 101
-J           = 20
-sig_amp     = 1
-sig_width   = 40
-sd          = 1
-sd_ratio    = 1
-fwhm        = 20
-fwhm_ratio  = 1
 run_tests   = True
-### construct simulation objects:
-s           = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(sd*sd_ratio), amp1=sd )
-w           = iws.signal.sigmoid_pulse_amps( Q=Q, q0=50, w=sig_width, wfall=5, amp0=(fwhm*fwhm_ratio), amp1=fwhm)
-gen         = lambda: iws.random.generate_dataset(J, Q, sig_amp=sig_amp, sig_width=sig_width, dist='gauss_matern', distparams=(s,w))
+wd          = os.path.join( os.path.dirname( __file__ ) , '_wd' )
+params      = iws.sim.SimulationParameters()   # baseline parameters
+sim         = iws.sim.Simulator(wd, params, suffix='')
 if run_tests:
-	sim         = iws.sim.Simulator(wd, gen, suff='')
 	sim.clear_wd()
 	p0,p1,p2,p3 = sim.run_iteration()
 	y0,y1       = sim.get_data()
 else:
-	y0,y1   = gen()
+	y0,y1       = sim.random()
 ### plot:
 plt.close('all')
 fig,AX = plt.subplots( 1, 2, figsize=(8,3) )
 plt.get_current_fig_manager().window.move(0, 0)
 ax0,ax1 = AX.flatten()
 ### plot dataset:
-q   = np.linspace(0, 1, Q)
+q   = np.linspace(0, 1, params.Q)
 c0,c1 = ('k','0.7') if grayscale else ('k','r')
 ax0.plot(q,  y0.T, color=c0, lw=0.3 )
 ax0.plot(q,  y1.T, color=c1, lw=0.5 )
