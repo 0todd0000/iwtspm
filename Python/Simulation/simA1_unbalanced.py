@@ -3,7 +3,7 @@ import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'nA'
 x           = list( range(4,37,2) )
 niter       = 10000

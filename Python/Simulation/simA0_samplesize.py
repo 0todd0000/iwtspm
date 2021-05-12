@@ -1,9 +1,10 @@
 
+import os
 import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'sample_size'
 x           = [5, 10, 15, 20, 25, 30, 40, 50, 80]
 niter       = 10000

@@ -8,7 +8,7 @@ import iwtspm as iws
 
 # ----- USER PARAMETERS --------
 perf_variable  = 'FWER'          # perf_variable should be "FWER" or "Sensitivity"
-# perf_variable  = 'Sensitivity'   # perf_variable should be "FWER" or "Sensitivity"
+perf_variable  = 'Sensitivity'   # perf_variable should be "FWER" or "Sensitivity"
 alpha          = 0.05            # Type I error rate
 niter          = 1000            # number of simulation iterations (100 or 1000); use 100 for faster figure generation
 # ----- END USER PARAMETERS ----
@@ -27,7 +27,7 @@ colors = ['0.7', 'm', 'b', 'c']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
 
 
-dirREPO        = '/Users/todd/GitHub/iwtspm/'
+dirREPO        = iws.dirREPO
 dir0           = os.path.join( dirREPO, 'Data', 'Simulation')
 
 

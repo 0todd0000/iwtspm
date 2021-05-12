@@ -1,9 +1,10 @@
 
+import os
 import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'fwhm'
 x           = [3, 10, 20, 30, 40, 50, 60]
 niter       = 10000

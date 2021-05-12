@@ -1,9 +1,10 @@
 
+import os
 import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'skew'
 x           = list( range(-5,6) )
 niter       = 10000

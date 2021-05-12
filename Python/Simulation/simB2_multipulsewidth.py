@@ -1,9 +1,10 @@
 
+import os
 import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'multipulse_width'
 x           = [4, 8, 12, 16, 20]
 niter       = 10000

@@ -1,9 +1,10 @@
 
+import os
 import iwtspm as iws
 
 
 
-wd          = '/Users/todd/Desktop/Working/'
+wd          = os.path.join( os.path.dirname(__file__), 'wd' )
 pname       = 'signal_amp'
 x           = [0, 0.5, 1, 1.5, 2.0, 2.5, 3]
 niter       = 10000
