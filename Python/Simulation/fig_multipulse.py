@@ -16,13 +16,18 @@ mpl.rcParams['font.sans-serif'] = 'Arial'
 
 grayscale  = False
 if grayscale:
-	colors     = ['0.75', 'k', '0.0', '0.5']
+	colors     = ['0.89', 'k', '0.0', '0.5']
 	markers    = ['o', 'o', 's', '^']
 	markers    = ['', '', '', '']
 	mfcs       = ['0.7', 'k', '0.0', '1.0']
 	lss        = ['-', '-', '--', '--']
 	lws        = [3, 2, 2, 1.5]
 	plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, marker=markers, mfc=mfcs, ls=lss, lw=lws)
+else:
+	colors     = ['0.7', 'm', 'b', 'c', 'r']
+	lws        = [4, 2, 2, 2, 2]
+	lss        = ['-', '-', '-', '-', ':']
+	plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors, ls=lss, lw=lws)
 
 
 
@@ -37,6 +42,7 @@ sim         = iws.sim.Simulator(wd, params, suffix='')
 if run_tests:
 	sim.clear_wd()
 	p0,p1,p2,p3 = sim.run_iteration()
+	p4          = iws.perf.fdr_corrected_pvalues(p0, alpha=0.05)
 	y0,y1       = sim.get_data()
 else:
 	y0,y1   = sim.random()
@@ -61,13 +67,14 @@ if run_tests:
 	ax1.plot(q, p1, label='IWT')
 	ax1.plot(q, p2, label='SPM')
 	ax1.plot(q, p3, label='SnPM')
+	ax1.plot(q, p4, label='FDR')
 	if grayscale:
 		ax1.axhline(0.05, color='0.85', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
 	else:
 		ax1.axhline(0.05, color='k', linestyle='--', lw=1, label=r'$\alpha = 0.05$', zorder=-1)
 	ax1.set_ylim(-0.05, 1.09)
 	ax1.set_ylabel( 'Probability' )
-	ax1.legend(facecolor='w')
+	ax1.legend(facecolor='w', loc='lower left', bbox_to_anchor=(0.6,0.35))
 	
 	
 d0   = r'$\mathcal{D}_0$'

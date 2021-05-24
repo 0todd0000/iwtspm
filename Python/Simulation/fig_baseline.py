@@ -74,7 +74,7 @@ if run_tests:
 		ax1.axhline(0.05, color='k', linestyle='--', lw=1, label=r'$\alpha = 0.05$', zorder=-1)
 	ax1.set_ylim(-0.05, 1.05)
 	ax1.set_ylabel( 'Probability' )
-	ax1.legend(loc='lower left', bbox_to_anchor=(0.32, 0.45), facecolor='w')
+	ax1.legend(loc='lower left', bbox_to_anchor=(0.30, 0.40), facecolor='w')
 	
 
 d0  = r'$\mathcal{D}_0$'
