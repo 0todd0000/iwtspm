@@ -53,11 +53,13 @@ plt.get_current_fig_manager().window.move(0, 0)
 ax0,ax1 = AX.flatten()
 ### plot dataset:
 q   = np.linspace(0, 1, params.Q)
-c0,c1 = ('k','0.7') if grayscale else ('k','r')
-ax0.plot(q,  y0.T, color=c0, lw=0.3 )
+cm0,cm1 = ('k','0.7') if grayscale else ('k','r')
+c0,c1   = ('k','0.7') if grayscale else ('0.7', (1,0.5,0.5))
+
+ax0.plot(q,  y0.T, color=c0, lw=0.5 )
 ax0.plot(q,  y1.T, color=c1, lw=0.5 )
-ax0.plot(q, y0.mean(axis=0), color=c0, lw=5, label='Sample mean A' )
-ax0.plot(q, y1.mean(axis=0), color=c1, lw=5, label='Sample mean B' )
+ax0.plot(q, y0.mean(axis=0), color=cm0, lw=3, label='Sample mean A' )
+ax0.plot(q, y1.mean(axis=0), color=cm1, lw=3, label='Sample mean B' )
 ax0.legend(loc='lower left', bbox_to_anchor=(0.27, 0.01), facecolor='w')
 
 
