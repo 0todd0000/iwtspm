@@ -29,10 +29,12 @@ mpl.rcParams['font.sans-serif'] = 'Arial'
 grayscale   = False
 
 if grayscale:
+	colorsM = ['k', '0.7']
 	colors0 = ['k', '0.7']
 	colors  = ['0.89', 'k', '0.0', '0.5', '0.5']
 else:
-	colors0 = ['k', 'c']
+	colorsM = ['k', 'c']
+	colors0 = ['0.7', (0.5,1,1)]
 	colors  = ['0.7', 'm', 'b', 'c', 'k']
 lss         = ['-', '-', '--', '--', ':']
 lws         = [3, 2, 2, 1.5, 1.5]
@@ -91,10 +93,10 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=None):
 	ax0,ax1 = AX.flatten()
 	q       = np.linspace(0, 1, p_unadjusted.size)
 	### plot dataset:
-	ax0.plot( q, y0.T, color=colors0[0], ls='-', lw=0.3 )
-	ax0.plot( q, y1.T, color=colors0[1], ls='-', lw=0.3 )
-	ax0.plot( q, y0.mean(axis=0), color=colors0[0], ls='-', lw=5, label='Mean A' )
-	ax0.plot( q, y1.mean(axis=0), color=colors0[1], ls='-', lw=5, label='Mean B' )
+	ax0.plot( q, y0.T, color=colors0[0], ls='-', lw=0.5 )
+	ax0.plot( q, y1.T, color=colors0[1], ls='-', lw=0.5 )
+	ax0.plot( q, y0.mean(axis=0), color=colorsM[0], ls='-', lw=3, label='Mean A' )
+	ax0.plot( q, y1.mean(axis=0), color=colorsM[1], ls='-', lw=3, label='Mean B' )
 	ax0.legend(facecolor='w')
 	if dv_label is not None:
 		ax0.set_ylabel( dv_label )
