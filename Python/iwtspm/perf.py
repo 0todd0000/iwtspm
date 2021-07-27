@@ -19,6 +19,15 @@ def fdr_corrected_pvalues(p, alpha=0.05):
 	pfdr = fdrcorrection(p, alpha=alpha, method='indep', is_sorted=False)[1]
 	return pfdr
 
+
+def fdr(p, domain, alpha=0.05):
+	nreject = ( p < alpha ).sum(axis=1)  # number rejected
+	nfp     = ( p[:, np.logical_not(domain)]  < alpha ).sum(axis=1)  # number of false positives
+	i       = nreject > 0
+	fdr     = np.zeros( nfp.size )
+	fdr[i]  = nfp[i] / nreject[i]
+	return 2*fdr.mean()
+
 def fpr(p, domain, alpha=0.05):
 	pnd  = p[:, np.logical_not(domain)]
 	b    = np.any( pnd<alpha , axis=1 )
@@ -40,8 +49,9 @@ def sensitivity(p, domain, alpha=0.05):
 def performance(p, domain, alpha=0.05):
 	m0   = fpr(p, domain, alpha=0.05)
 	m1   = sensitivity(p, domain, alpha=0.05)
+	m2   = fdr(p, domain, alpha=0.05)
 	# m2   = fallout(p, domain, alpha=0.05)
-	return np.around( [m0, m1] , 5)
+	return np.around( [m0, m1, m2] , 5)
 
 
 def get_domain(Q, width, sig_fallw=5):

@@ -9,6 +9,7 @@ import iwtspm as iws
 # ----- USER PARAMETERS --------
 perf_variable  = 'FWER'          # perf_variable should be "FWER" or "Sensitivity"
 # perf_variable  = 'Sensitivity'   # perf_variable should be "FWER" or "Sensitivity"
+perf_variable  = 'FDR'          # perf_variable should be "FWER" or "Sensitivity"
 grayscale      = False
 alpha          = 0.05            # Type I error rate
 niter          = 1000            # number of simulation iterations (100 or 1000); use 100 for faster figure generation
@@ -32,7 +33,7 @@ dirREPO        = iws.dirREPO
 dir0           = os.path.join( dirREPO, 'Data', 'Simulation')
 
 
-perf_variables = 'FWER', 'Sensitivity'
+perf_variables = 'FWER', 'Sensitivity', 'FDR'
 perfvarind     = perf_variables.index(perf_variable)
 simnames       = []
 simnames.append( ['samplesize', 'unbalanced'] )
@@ -92,7 +93,7 @@ for i,rowsimnames in enumerate(simnames):
 		ax.text(0.03, 0.92, '(%s)'%chr(97+n), transform=ax.transAxes)
 		n+=1
 		
-if perf_variable == 'FWER':
+if perf_variable in ['FWER', 'FDR']:
 	plt.setp(AX, ylim=(-0.05,0.4))
 else:
 	plt.setp(AX, ylim=(-0.05,1))
