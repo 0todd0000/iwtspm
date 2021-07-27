@@ -8,7 +8,8 @@ import iwtspm as iws
 
 # ----- USER PARAMETERS --------
 perf_variable  = 'FWER'          # perf_variable should be "FWER" or "Sensitivity"
-perf_variable  = 'Sensitivity'   # perf_variable should be "FWER" or "Sensitivity"
+# perf_variable  = 'Sensitivity'   # perf_variable should be "FWER" or "Sensitivity"
+grayscale      = False
 alpha          = 0.05            # Type I error rate
 niter          = 1000            # number of simulation iterations (100 or 1000); use 100 for faster figure generation
 # ----- END USER PARAMETERS ----
@@ -99,7 +100,7 @@ else:
 [ax.set_ylabel(perf_variable)   for ax in AX[:,0]]
 
 ax = AX[0,0]
-labels = ['Unadjusted', 'IWT', 'SPM', 'SnPM', 'FDR', 'Baseline value']
+labels = ['Unadjusted', 'IWT', 'SPM', 'SnPM', 'BH', 'Baseline value']
 fig.legend(ax.lines, labels, loc='lower center', bbox_to_anchor=(0.5,0.97), ncol=6)
 
 plt.tight_layout(rect=[0,0,0.97,0.97])
@@ -113,3 +114,10 @@ for y,label in zip(rowlabely, rowlabels):
 
 plt.show()
 
+
+
+dirREPO       = iws.dirREPO
+dirFIG        = os.path.join( dirREPO, 'Figures', 'Simulation')
+dirFIG        = os.path.join(dirFIG, 'bw') if grayscale else dirFIG
+fname_fig     = os.path.join( dirFIG, f'fig_perf_{perf_variable.lower()}.pdf')
+plt.savefig(fname_fig)

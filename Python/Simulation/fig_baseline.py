@@ -69,7 +69,7 @@ if run_tests:
 	ax1.plot(q, p1, label='IWT')
 	ax1.plot(q, p2, label='SPM')
 	ax1.plot(q, p3, label='SnPM')
-	ax1.plot(q, p4, label='FDR')
+	ax1.plot(q, p4, label='BH')
 	if grayscale:
 		ax1.axhline(0.05, color='0.85', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
 	else:

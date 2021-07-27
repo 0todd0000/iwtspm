@@ -105,7 +105,7 @@ def plot_results(p_unadjusted, p_iwt, p_spm, p_snpm, p_fdr, dv_label=None):
 	ax1.plot( q, p_iwt,  label='IWT')
 	ax1.plot( q, p_spm,  label='SPM')
 	ax1.plot( q, p_snpm, label='SnPM')
-	ax1.plot( q, p_fdr,  label='FDR')
+	ax1.plot( q, p_fdr,  label='BH')
 	ax1.axhline(0.05, color='0.85', linestyle='-', lw=5, label=r'$\alpha = 0.05$', zorder=-1)
 
 
